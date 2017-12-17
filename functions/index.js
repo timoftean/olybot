@@ -7,7 +7,8 @@ const request = require('request');
 const cors = require('cors')({origin: true});
 const cookieParser = require('cookie-parser')();
 const server = express();
-const access_token = require('./config.json').access_token
+const gitlab_access_token = require('./config.json').gitlab_access_token
+const slack_access_token = require('./config.json').slack_access_token
 
 const dialogflowFirebaseFulfillment = (request, response) => {
   console.log('Dialogflow Request headers: ' + JSON.stringify(request.headers));
@@ -101,7 +102,7 @@ function sendResponse (response, responseToUser) {
 }
 
 function tasksResponse(response) {
-  const url = `https://gitlab.com/api/v4/projects/4372969/issues?private_token=${access_token}`
+  const url = `https://gitlab.com/api/v4/projects/4372969/issues?private_token=${gitlab_access_token}`
   request.get(url, (err, status, body) => {
     if (err) console.log("err", err)
     let attachments = []
@@ -109,29 +110,32 @@ function tasksResponse(response) {
       'data': {
         'slack': {
           'text': 'Here are all issues.',
-          'attachments': [
-            {
-              'title': 'Title: this is a title',
-              'title_link': 'https://assistant.google.com/',
-              'text': 'This is an attachment.  Text in attachments can include \'quotes\' and most other unicode characters including emoji 📱.  Attachments also upport line\nbreaks.',
-            },
-            {
-              'title': 'Title: this is a title',
-              'title_link': 'https://assistant.google.com/',
-              'text': 'This is an attachment.  Text in attachments can include \'quotes\' and most other unicode characters including emoji 📱.  Attachments also upport line\nbreaks.',
-              // 'image_url': 'https://scontent.fomr1-1.fna.fbcdn.net/v/t31.0-8/24879675_1561203907288620_7306183523469455563_o.jpg?oh=fa022a91645d1243408134194a663a97&oe=5AB98481',
-              // 'fallback': 'This is a fallback.'
-            }
-          ]
         }
       }
     }
     body = JSON.parse(body)
     body.map((task) => {
+      let fields = task.labels.map(label => {
+        return {
+          "title": "Label",
+          "value": label,
+          "short": true
+        }
+      })
+      fields.push({
+        "title": "State",
+        "value": task.state,
+        "short": true
+      })
       attachments.push({
+        color: "#36a64f",
         title: task.title,
         title_link: task.web_url,
-        text: "lala"
+        text: task.description ? task.description.substr(0, 50) + "..." : "",
+        author_name: task.assignee? task.assignee.name : "",
+        author_link: task.assignee? task.assignee.web_url : "",
+        ts: new Date(task.createdAt).getTime(),
+        fields: fields || []
       })
     })
     
@@ -148,7 +152,7 @@ server.get('/',dialogflowFirebaseFulfillment)
   .post('/',dialogflowFirebaseFulfillment)
 
 server.get('/hello', (req, res) => {
-  const url = `https://gitlab.com/api/v4/projects/4372969/issues?private_token=${access_token}`
+  const url = `https://gitlab.com/api/v4/projects/4372969/issues?private_token=${gitlab_access_token}`
   request.get(url, (err, response, body) => {
     if (err) console.log("err", err)
     res.json(JSON.parse(body))

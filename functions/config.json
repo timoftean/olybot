@@ -1,3 +1,5 @@
 {
-  "access_token": "RjwQQu8WKRmwX_msxbJP"
+  "gitlab_access_token": "RjwQQu8WKRmwX_msxbJP",
+  "slack_access_token": "xoxp-280259445441-280259445521-288841244390-4c1c73d0aaa5ba5c4c677979e2da8e53&user",
+  "slack_api": "https://slack.com/api/users.info?token=xoxp-280259445441-280259445521-288841244390-4c1c73d0aaa5ba5c4c677979e2da8e53&user=U887MD3FB&pretty=1"
 }
