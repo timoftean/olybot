@@ -14,17 +14,21 @@
   "author": "Timofte Alexandru",
   "license": "ISC",
   "dependencies": {
+    "@slack/client": "^3.16.0",
     "@types/node": "7.0.22",
     "body-parser": "^1.18.2",
     "cors": "^2.8.4",
     "express": "4.15.3",
     "http": "0.0.0",
     "method-override": "^2.3.10",
+    "mongoose": "^5.0.7",
     "morgan": "^1.9.0",
     "nodemon": "1.11.0"
   },
   "devDependencies": {
     "@types/mocha": "2.2.41",
+    "@types/mongodb": "^3.0.5",
+    "@types/mongoose": "^5.0.2",
     "@types/node": "7.0.22",
     "eslint": "4.0.0",
     "eslint-config-airbnb-base": "11.2.0",
