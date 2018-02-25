@@ -1,5 +1,5 @@
 import { Router } from 'express'
-import { slackInteract } from '../controllers'
+import { slackInteract } from '../middlewares'
 
 const router = Router()
 
