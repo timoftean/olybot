@@ -3,6 +3,32 @@ import { config } from '../config'
 const botToken = config.SLACK.BOT_ACCESS_TOKEN
 const slackWebClient = new WebClient(botToken)
 
+
+/*
+  sendMessage()
+  args:
+    channelId (String): Slack channelId to post message to
+    message (String): Message to send to that channel as this bot
+  returns:
+    undefined
+*/
+const sendMessageToUser = async (channelId, message) => {
+    const res = await slackWebClient.chat.postMessage(channelId, message)
+    console.log('MESSAGE SENT: ', res)
+}
+
+/*
+  sendMessageObj()
+  args:
+    channelId (String): Slack channelId to post message to
+    messageObj (String): The `attachment` that Slack expects as an object
+  returns:
+    undefined
+*/
+const sendMessageObj = (channelId, messageObj) => {
+    slackWebClient.chat.postMessage(channelId, null, messageObj);
+}
+
 /*
   pullInfoFromSlackId()
     args:
@@ -29,8 +55,7 @@ const slackWebClient = new WebClient(botToken)
             is_bot: false,
           }
 */
-
-export const pullInfoFromSlackId = async slackId => await (slackWebClient.users.info(slackId))
+const pullInfoFromSlackId = async slackId => await (slackWebClient.users.info(slackId))
 
 /*
     findSlackDmId()
@@ -48,8 +73,7 @@ export const pullInfoFromSlackId = async slackId => await (slackWebClient.users.
           acceptedScopes: [ 'im:write', 'post' ]
         }
 */
-
-export const findSlackDmId = async slackId => await (slackWebClient.im.open(slackId))
+const findSlackDmId = async slackId => await (slackWebClient.im.open(slackId))
 
 /*
     updateUserWithSlack()
@@ -62,22 +86,23 @@ export const findSlackDmId = async slackId => await (slackWebClient.im.open(slac
             (user.save() resultant Promise)
 */
 
-export const updateUserWithSlack = async (userToUpdate) => {
-    try {
-        let user = userToUpdate
-        let res = await pullInfoFromSlackId(user.slackId)
+const updateUserWithSlack = async (userToUpdate) => {
+    let user = userToUpdate
+    let res = await pullInfoFromSlackId(user.slackId)
 
-        const userData = res.user;
-        user.slackUsername = userData.name;
-        user.slackEmail = userData.profile.email;
-        user.displayName = userData.profile.display_name || userData.real_name;
-        user = await user.save();
+    const userData = res.user
+    user.slackUsername = userData.name
+    user.slackEmail = userData.profile.email
+    user.displayName = userData.profile.display_name || userData.real_name
+    user = await user.save()
 
-        res = await findSlackDmId(user.slackId)
-        user.slackDmId = res.channel.id
-        return await user.save()
-    } catch(error) {
-        console.log('COULD NOT UPDATE USER', error)
-    }
+    res = await findSlackDmId(user.slackId)
+    user.slackDmId = res.channel.id
+    return await user.save()
+}
 
+export {
+    updateUserWithSlack,
+    sendMessageToUser,
+    sendMessageObj
 }

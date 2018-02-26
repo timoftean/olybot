@@ -1,6 +1,6 @@
 import { Model, Document } from 'mongoose'
-import { User, UserModel } from "./entity"
-import { updateUserWithSlack } from '../../slackRequests/index'
+import { User, UserModel } from './entity'
+import { updateUserWithSlack } from '../../slack'
 
 class UserController {
     private model: Model<Document>
@@ -12,7 +12,7 @@ class UserController {
     /**
      * find a user or create one with slack information
      * @param query
-     * @returns {Promise<any>}
+     * @returns {Promise<User>}
      */
     async findOneOrCreateWithSlackId (query: any) {
         try{

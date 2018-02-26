@@ -5,8 +5,9 @@ export const config = {
         SERVER: process.env.MONGODB_SERVER,
         DATABASE: process.env.MONGODB_DATABASE
     },
-    DIALOGFLOW:{
-        NLP_ACCESS_TOKEN: process.env.NLP_ACCESS_TOKEN
+    DILOGFLOW: {
+        CLIENT_ACCESS_TOKEN: process.env.NLP_CLIENT_ACCESS_TOKEN,
+        DEVELOPER_ACCESS_TOKEN: process.env.NLP_DEVELOPER_ACCESS_TOKEN
     },
     GITLAB: {
         ACCESS_TOKEN: process.env.GITLAB_ACCESS_TOKEN

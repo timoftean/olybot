@@ -8,7 +8,7 @@ import * as mongoose from 'mongoose'
 
 import { config } from './config'
 import { router } from './routes'
-import { startRTM } from './bot'
+import { startRTM } from './slack'
 
 export class Server {
 
