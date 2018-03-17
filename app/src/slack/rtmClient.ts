@@ -23,7 +23,7 @@ rtm.on(RTM_EVENTS.MESSAGE, async (message) => {
             user.slackDmId = message.channel
             user = await user.save()
         }
-        console.log("USER:", user)
+        // console.log("USER:", user)
         await dialogFlowProcessor(user, message);
     } catch (error) {
         console.log('CANNOT PROCESS SLACK MESSAGE: ', error)

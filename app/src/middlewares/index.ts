@@ -1,3 +1,1 @@
-import { slackInteract } from "./slackInteract";
-
-export { slackInteract }
+export { slackInteract } from "./slackInteract"
