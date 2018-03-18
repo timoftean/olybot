@@ -6,7 +6,7 @@ export const request = async (user, message) => {
         const res = await fetch('https://api.dialogflow.com/v1/query?v=20150910', {
             method: 'POST',
             headers: {
-                Authorization: `Bearer ${config.DILOGFLOW.CLIENT_ACCESS_TOKEN}`,
+                Authorization: `Bearer ${config.DIALOGFLOW.CLIENT_ACCESS_TOKEN}`,
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({

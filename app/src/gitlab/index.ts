@@ -1,5 +1,1 @@
-import { getAllIssues } from './issues'
-
-export {
-    getAllIssues
-}
+export { getAllIssues, getMyIssues } from './issues'

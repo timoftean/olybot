@@ -14,7 +14,7 @@ class UserController {
      * @param query
      * @returns {Promise<User>}
      */
-    async findOneOrCreateWithSlackId (query: any) {
+    public async findOneOrCreateWithSlackId (query: any) {
         try{
             let user: any = await this.model.findOne(query)
             if (user) {
@@ -34,4 +34,4 @@ class UserController {
 
 }
 
-export const userController =  new UserController()
+export const userController = new UserController()

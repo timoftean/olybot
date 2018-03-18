@@ -5,12 +5,15 @@ export const config = {
         SERVER: process.env.MONGODB_SERVER,
         DATABASE: process.env.MONGODB_DATABASE
     },
-    DILOGFLOW: {
+    DIALOGFLOW: {
         CLIENT_ACCESS_TOKEN: process.env.NLP_CLIENT_ACCESS_TOKEN,
         DEVELOPER_ACCESS_TOKEN: process.env.NLP_DEVELOPER_ACCESS_TOKEN
     },
     GITLAB: {
-        ACCESS_TOKEN: process.env.GITLAB_ACCESS_TOKEN
+        ACCESS_TOKEN: process.env.GITLAB_ACCESS_TOKEN,
+        SECRET: process.env.GITLAB_SECRET,
+        APPLICATION_ID: process.env.GITLAB_APPLICATION_ID,
+        PROJECT_ID: process.env.GITLAB_PROJECT_ID
     },
     SLACK: {
         BOT_ACCESS_TOKEN: process.env.SLACK_BOT_ACCESS_TOKEN,

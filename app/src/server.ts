@@ -5,10 +5,13 @@ import * as express from 'express'
 import * as methodOverride from 'method-override'
 import * as morgan from 'morgan'
 import * as mongoose from 'mongoose'
+import * as passport from 'passport'
+import * as GitLabStrategy from 'passport-gitlab2'
 
 import { config } from './config'
 import { router } from './routes'
 import { startRTM } from './slack'
+import {gitlabAuth} from './middlewares/gitlabAuth'
 
 export class Server {
 
@@ -28,6 +31,9 @@ export class Server {
             // setup server and routes
             this.setupExpress()
 
+            //serialize passport user
+            this.serializeUser()
+
             // connect to mongodb
             await this.createMongooseConnection()
 
@@ -38,11 +44,30 @@ export class Server {
         }
     }
 
+    private serializeUser() {
+        passport.serializeUser(function(user, done) {
+            done(null, user);
+        })
+
+        passport.deserializeUser(function(user, done) {
+            done(null, user);
+        })
+    }
+
     private setupExpress(): void {
         this.app.use(bodyParser.urlencoded({extended: true}))
         this.app.use(bodyParser.json({ limit: '50mb'} ))
         this.app.use(methodOverride())
+        this.app.use(passport.initialize())
+        this.app.use(passport.session())
         this.app.use(router)
+
+        passport.use(new GitLabStrategy({
+                clientID: config.GITLAB.APPLICATION_ID,
+                clientSecret: config.GITLAB.SECRET,
+                callbackURL: "http://localhost:3000/auth/gitlab/callback"
+            }, gitlabAuth
+        ))
 
         this.app.use((req, res, next): void => {
             res.header('Access-Control-Allow-Origin', '*')
