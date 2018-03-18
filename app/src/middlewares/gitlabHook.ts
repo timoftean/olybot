@@ -42,6 +42,7 @@ export const gitlabHook = async (req, res) => {
             text += `the issue number ${iid}: ${title}`
             sendMessageToUser(user.slackDmId, text)
         })
+        // todo: add issue close
 
     }
 
