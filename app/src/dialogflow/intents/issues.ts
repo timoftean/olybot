@@ -1,7 +1,6 @@
-import { getAllIssues, getMyIssues } from '../../gitlab/issues'
+import { getIssues } from '../../gitlab/issues'
 
 const processAttachments = (issues) => {
-    console.log("ISSUES:", issues)
     return issues.map(issue => {
         let fields = issue.labels.map(label => {
             return {
@@ -30,30 +29,30 @@ const processAttachments = (issues) => {
     })
 }
 
-const processGetMyIssues = async (gitlabUserId) => {
+const processGetMyIssues = async (options) => {
     let attachments = []
     let text = ''
 
-    const issues =  await getMyIssues(gitlabUserId)
+    const issues =  await getIssues(options)
     if (issues.length === 0 ) {
         text = 'There are no issues at the moment'
     } else {
-        text  = 'Here is the list with all your issues'
+        text = 'Here are the issues you are searching for'
         attachments = processAttachments(issues)
     }
 
     return { attachments, text }
 }
 
-const processGetAllIssues = async () => {
+const processGetAllIssues = async (options) => {
     let attachments = []
     let text = ''
 
-    const issues =  await getAllIssues()
+    const issues =  await getIssues(options)
     if (issues.length ===0 ) {
         text = 'There are no issues at the moment'
     } else {
-        text  = 'Here are all the issues of your project'
+        text = 'Here are the issues you are searching for'
         attachments = processAttachments(issues)
     }
 

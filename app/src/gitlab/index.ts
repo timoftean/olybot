@@ -1,1 +1,1 @@
-export { getAllIssues, getMyIssues } from './issues'
+export { getIssues } from './issues'
