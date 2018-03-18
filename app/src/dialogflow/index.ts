@@ -43,7 +43,7 @@ const dialogFlowProcessor = async (user, message) => {
             case 'issues - context:issues.getAll - comment:issue_scope': {
                 const context = result.contexts[0]
                 const { issue_state, issue_scope } = context.parameters
-                
+
                 const { attachments, text }  = await processGetAllIssues({ issue_state, issue_scope })
                 await sendMessageToUser(message.channel, text, attachments)
                 break

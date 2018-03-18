@@ -1,6 +1,6 @@
 import * as passport from 'passport'
 import { Router } from 'express'
-import { slackInteract } from '../middlewares'
+import { slackInteract, gitlabHook } from '../middlewares'
 
 const router = Router()
 
@@ -36,5 +36,11 @@ router.get('/login', (req, res) => res.send('unauthenticated'))
 //slack webhook|
 //-------------
 router.post('/slack', slackInteract)
+
+// ----------------------
+//gitlab project webhook|
+//-----------------------
+router.post('/gitlab/hooks/:projectId', gitlabHook)
+
 
 export { router }

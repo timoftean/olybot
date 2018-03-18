@@ -8,10 +8,14 @@ export interface User {
     slackEmail: string
     slackDmId: string
     displayName: string,
-    gitlabUserId: number
+    gitlabUserId: number,
+    gitlabUsername: string
 }
 
 const UserSchema = new Schema({
+    gitlabUsername: {
+        type: String
+    },
     gitlabUserId: {
         type: Schema.Types.Number
     },

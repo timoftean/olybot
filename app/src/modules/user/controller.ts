@@ -32,6 +32,24 @@ class UserController {
         }
     }
 
+    /**
+     * find user
+     * @param cond
+     * @returns {Promise<"mongoose".Document>}
+     */
+    public async find(cond) {
+        return await this.model.findOne(cond)
+    }
+
+    /**
+     * find all users
+     * @param cond
+     * @returns {Promise<"mongoose".Document[]>}
+     */
+    public async findAll(cond) {
+        return await this.model.find(cond)
+    }
+
 }
 
 export const userController = new UserController()
