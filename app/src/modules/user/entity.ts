@@ -1,18 +1,19 @@
-import { Model, model, Document, Schema } from "mongoose"
+import { Model, model, Document, Schema, Types } from "mongoose"
+type ObjectId = Types.ObjectId
 
 export interface User {
-    gitlabAccountInfo?: object
+    _id?: ObjectId
     slackId: string
     slackUsername: string
     slackEmail: string
     slackDmId: string
-    displayName: string
+    displayName: string,
+    gitlabUserId: number
 }
 
 const UserSchema = new Schema({
-    gitlabAccountInfo: {
-        type: Object,
-        default: {},
+    gitlabUserId: {
+        type: Schema.Types.Number
     },
     slackId: {
         type: String,
@@ -29,7 +30,7 @@ const UserSchema = new Schema({
     },
     displayName: {
         type: String,
-    },
+    }
 })
 
 type UserType = User & Document

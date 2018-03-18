@@ -1,6 +1,6 @@
 import { sendMessageToUser } from '../slack'
 import { request } from './request'
-import { processGetAllIssues } from './intents/issues'
+import { processGetAllIssues, processGetMyIssues } from './intents/issues'
 
 const dialogFlowProcessor = async (user, message) => {
     console.log('DIALOGFLOW PROCESSOR: \n user:', user,'\n message:', message)
@@ -13,13 +13,13 @@ const dialogFlowProcessor = async (user, message) => {
     } else {
         switch (result.metadata.intentName) {
             case 'issues.getAll': {
-                console.log(`getALL: user-${user}, result-${result}`)
                 const { attachments, text }  = await processGetAllIssues()
-                console.log('ISSUES PROCESSED:', text, attachments)
                 await sendMessageToUser(message.channel, text, attachments)
                 break
             }
-            case 'meeting.add': {
+            case 'issues.getMines': {
+                const { attachments, text }  = await processGetMyIssues(user.gitlabUserId)
+                await sendMessageToUser(message.channel, text, attachments)
                 break
             }
             default: {
