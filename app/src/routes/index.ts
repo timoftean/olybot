@@ -18,13 +18,15 @@ router.get('/hello', (req, res) => {
 router.get('/gitlab/auth/:userId', (req, res) => {
     const { userId } = req.params
     passport.authenticate('gitlab', {
-        state: userId
+        state: userId,
+        scope: ['api']
     })(req, res)
 })
 
 router.get('/auth/gitlab/callback',
     passport.authenticate('gitlab', {
-        failureRedirect: '/login'
+        failureRedirect: '/login',
+        scope: ['api']
     }), gitlabCallback )
 
 router.get('/login', (req, res) => res.send('unauthenticated'))

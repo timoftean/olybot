@@ -11,6 +11,13 @@ const dialogFlowProcessor = async (user, message) => {
     if (result.actionIncomplete) {
         await sendMessageToUser(user, result.fulfillment.speech)
     } else {
+        if (result.metadata.intentName &&
+            result.metadata.intentName.indexOf('Default') === -1 &&
+            result.action.indexOf('smalltalk') === -1
+        ) {
+            const messageSent = processAndSendTextIfNotLoggedIng(message.channel, user)
+            if (messageSent) return
+        }
         switch (result.metadata.intentName) {
             case 'issues.getAll': {
                 const { contexts } = result
@@ -18,7 +25,7 @@ const dialogFlowProcessor = async (user, message) => {
                 const { issue_state, issue_scope } = result.parameters
                 const { gitlabUserId } = user
 
-                const { attachments, text }  = await processGetAllIssues({ issue_state, issue_scope, gitlabUserId })
+                const { attachments, text }  = await processGetAllIssues(user, { issue_state, issue_scope, gitlabUserId })
                 console.log('PARAMETERS', text, issue_state, issue_scope, gitlabUserId)
                 await sendMessageToUser(message.channel, text, attachments)
                 break
@@ -26,7 +33,7 @@ const dialogFlowProcessor = async (user, message) => {
 
             case 'issues.getMines': {
                 const { gitlabUserId } = user
-                const { attachments, text }  = await processGetMyIssues({ gitlabUserId })
+                const { attachments, text }  = await processGetMyIssues(user,{ gitlabUserId })
                 await sendMessageToUser(message.channel, text, attachments)
                 break
             }
@@ -35,7 +42,7 @@ const dialogFlowProcessor = async (user, message) => {
                 const context = result.contexts[0]
                 const { issue_state, issue_scope } = context.parameters
 
-                const { attachments, text }  = await processGetAllIssues({ issue_state, issue_scope })
+                const { attachments, text }  = await processGetAllIssues(user, { issue_state, issue_scope })
                 await sendMessageToUser(message.channel, text, attachments)
                 break
             }
@@ -44,7 +51,7 @@ const dialogFlowProcessor = async (user, message) => {
                 const context = result.contexts[0]
                 const { issue_state, issue_scope } = context.parameters
 
-                const { attachments, text }  = await processGetAllIssues({ issue_state, issue_scope })
+                const { attachments, text }  = await processGetAllIssues(user, { issue_state, issue_scope })
                 await sendMessageToUser(message.channel, text, attachments)
                 break
             }
@@ -55,6 +62,15 @@ const dialogFlowProcessor = async (user, message) => {
             }
         }
     }
+}
+
+export const processAndSendTextIfNotLoggedIng = async (channel, user) => {
+    const text = `Please first connect to Gitlab account by visiting http://localhost:3000/gitlab/auth/${user.slackId}`
+    if (!user.gitlabUserId) {
+        await sendMessageToUser(channel, text)
+        return true
+    }
+    return false
 }
 
 export { dialogFlowProcessor }

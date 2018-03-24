@@ -29,11 +29,11 @@ const processAttachments = (issues) => {
     })
 }
 
-const processGetMyIssues = async (options) => {
+const processGetMyIssues = async (user, options) => {
     let attachments = []
     let text = ''
 
-    const issues =  await getIssues(options)
+    const issues =  await getIssues(user, options)
     if (issues.length === 0 ) {
         text = 'There are no issues at the moment'
     } else {
@@ -44,12 +44,15 @@ const processGetMyIssues = async (options) => {
     return { attachments, text }
 }
 
-const processGetAllIssues = async (options) => {
+const processGetAllIssues = async (user, options) => {
     let attachments = []
     let text = ''
 
-    const issues =  await getIssues(options)
-    if (issues.length ===0 ) {
+    const issues =  await getIssues(user, options)
+    if (!Array.isArray(issues)) {
+        text = 'There was a problem connecting to gitlab'
+    }
+    else if (issues.length ===0 ) {
         text = 'There are no issues at the moment'
     } else {
         text = 'Here are the issues you are searching for'
