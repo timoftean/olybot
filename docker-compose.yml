@@ -5,22 +5,20 @@ services:
     restart: always
     build: ./app
     ports:
-      - ${APP_PORT}:${APP_PORT}
+      - '${APP_PORT}:${APP_PORT}'
     env_file:
       - .env
     volumes:
-      - ./app/:/wrk
+      - './app/:/wrk'
     depends_on:
       - mongodb
-
   mongodb:
     container_name: mongodb
-    image: mongo:3.6.2
+    image: 'mongo:3.6.2'
     volumes:
-      - db-data:/var/lib/mongodb
+      - 'db-data:/var/lib/mongodb'
     ports:
-      - ${MONGODB_PORT}:${MONGODB_PORT}
-
+      - '${MONGODB_PORT}:${MONGODB_PORT}'
 volumes:
   db-data:
     driver: local

@@ -1,3 +1,3 @@
 export { slackInteract } from './slackInteract'
-export { gitlabAuth } from './gitlabAuth'
+export { gitlabAuth, gitlabCallback } from './gitlabAuth'
 export { gitlabHook } from './gitlabHook'

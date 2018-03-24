@@ -1,6 +1,7 @@
 import * as passport from 'passport'
 import { Router } from 'express'
-import { slackInteract, gitlabHook } from '../middlewares'
+import { slackInteract, gitlabHook } from '../hooks'
+import { gitlabCallback } from '../hooks/gitlabAuth'
 
 const router = Router()
 
@@ -14,21 +15,17 @@ router.get('/hello', (req, res) => {
 //------------
 //gitlab auth|
 //------------
-router.get('/gitlab/auth/:userId', (req, res, next) => {
+router.get('/gitlab/auth/:userId', (req, res) => {
     const { userId } = req.params
-    console.log("USERID:", userId)
-    // req.session.userId = userId
-    next()
-}, passport.authenticate('gitlab'))
+    passport.authenticate('gitlab', {
+        state: userId
+    })(req, res)
+})
 
 router.get('/auth/gitlab/callback',
     passport.authenticate('gitlab', {
         failureRedirect: '/login'
-    }),
-    (req, res) => {
-        console.log("callback-successfully authenticated, user", req.user)
-        res.send('gitlab account confirmed')
-    })
+    }), gitlabCallback )
 
 router.get('/login', (req, res) => res.send('unauthenticated'))
 

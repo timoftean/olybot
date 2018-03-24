@@ -19,6 +19,9 @@ const UserSchema = new Schema({
     gitlabUserId: {
         type: Schema.Types.Number
     },
+    gitlab_access_token: {
+        type: String
+    },
     slackId: {
         type: String,
         required: true,
@@ -38,4 +41,4 @@ const UserSchema = new Schema({
 })
 
 type UserType = User & Document
-export const UserModel: Model<UserType> = model<UserType>("user", UserSchema);
+export const UserModel: Model<UserType> = model<UserType>("user", UserSchema)

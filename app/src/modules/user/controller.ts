@@ -46,7 +46,7 @@ class UserController {
      * @param cond
      * @returns {Promise<"mongoose".Document[]>}
      */
-    public async findAll(cond) {
+    public async findAll(cond): Promise<any> {
         return await this.model.find(cond)
     }
 

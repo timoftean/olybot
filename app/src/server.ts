@@ -7,11 +7,12 @@ import * as morgan from 'morgan'
 import * as mongoose from 'mongoose'
 import * as passport from 'passport'
 import * as GitLabStrategy from 'passport-gitlab2'
+import * as session from 'express-session'
 
 import { config } from './config'
 import { router } from './routes'
 import { startRTM } from './slack'
-import {gitlabAuth} from './middlewares/gitlabAuth'
+import {gitlabAuth} from './hooks/gitlabAuth'
 
 export class Server {
 
@@ -55,6 +56,13 @@ export class Server {
     }
 
     private setupExpress(): void {
+        this.app.set('trust proxy', 1) // trust first proxy
+        this.app.use(session({
+            secret: 'olybot_r4nd0m',
+            resave: false,
+            saveUninitialized: true,
+            cookie: { secure: true },
+        }))
         this.app.use(bodyParser.urlencoded({extended: true}))
         this.app.use(bodyParser.json({ limit: '50mb'} ))
         this.app.use(methodOverride())

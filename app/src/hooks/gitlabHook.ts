@@ -12,7 +12,7 @@ export const gitlabHook = async (req, res) => {
     let text = ''
 
     if (headers['x-gitlab-event'] === 'Issue Hook') {
-        const users = await userController.findAll({ gitlabProjectId: projectId })
+        const users: any = await userController.findAll({ gitlabProjectId: projectId })
         users.map(user => {
 
             //skip the user who made the action
