@@ -6,11 +6,14 @@ export const slackInteract = async (req, res) => {
 
     console.log('fullfilment: ', user, callback_id, action)
     switch (callback_id) {
-        case 'confirm': {
+        case 'confirm_project': {
+
+            res.send(`Project confirmed ✅`);
             break
         }
         default: {
             console.error('POST to /slack had an unknown callback_id.');
         }
     }
+
 }

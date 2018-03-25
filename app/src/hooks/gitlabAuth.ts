@@ -1,5 +1,6 @@
 import { UserModel } from '../modules/user/entity'
-import {sendMessageToUser} from "../slack/webClient";
+import {sendMessageObj, sendMessageToUser} from "../slack/webClient";
+import {getUserProjects} from "../gitlab/user";
 
 export const gitlabAuth = (accessToken, refreshToken, profile, cb) => {
     console.log('ACCESS_TOKEN:', accessToken,)
@@ -19,9 +20,36 @@ export const gitlabCallback = async (req, res) => {
             gitlab_access_token: access_token,
             gitlabUserId: id,
             gitlabUsername: username
-        }
+        },
+        { new: true}
     )
     sendMessageToUser(user.slackDmId, 'Successfully integrated with Gitlab!')
-    
-    res.send(`gitlab account confirmed for user ${username}`)
+
+    const projects = await getUserProjects(user)
+    let actions = []
+    console.log('PROJECTS:', projects)
+    projects.map(p => {
+        actions.push({
+            name: p.id,
+            text: p.name,
+            type: 'button',
+            style: 'primary',
+            value: 'selected',
+        })
+    })
+    sendMessageObj(
+        user.slackDmId,
+        { // begin attachment object
+            attachments: [{
+                callback_id: 'confirm_project',
+                text: `Please confirm on which project you want to work from now on.`,
+                fallback: 'Project confirmation',
+                attachment_type: 'default',
+                actions: actions,
+            }],
+        }
+    );
+
+
+    res.send('Successfully integrated with Gitlab!')
 }
