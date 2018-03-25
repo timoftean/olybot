@@ -1,0 +1,11 @@
+html
+    script(src='/javascripts/index.js')
+    script(src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js")
+    body
+        h1 Please select on which project you want to work:
+        ul
+            each project in projects
+                li
+                    a(onclick=`viewPost(${project.id})`) #{project.name}
+
+    $

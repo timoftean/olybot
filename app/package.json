@@ -8,7 +8,9 @@
     "dev": "tsc --watch & nodemon dist",
     "test": "tsc && mocha dist/**/*.test.js",
     "lint": "eslint src --ext ts",
-    "tsc": "tsc"
+    "tsc": "tsc",
+    "pug": "pug src/templates/",
+    "pug:w": "pug src/templates/projects.pug --out dist/templates/ --watch"
   },
   "keywords": [],
   "author": "Timofte Alexandru",
@@ -17,6 +19,7 @@
     "@slack/client": "^3.16.0",
     "@types/node": "7.0.22",
     "body-parser": "^1.18.2",
+    "concurrently": "^3.5.1",
     "cors": "^2.8.4",
     "express": "4.15.3",
     "express-session": "^1.15.6",
@@ -27,7 +30,10 @@
     "node-fetch": "^2.0.0",
     "nodemon": "1.11.0",
     "passport": "^0.4.0",
-    "passport-gitlab2": "^3.0.0"
+    "passport-gitlab2": "^3.0.0",
+    "path": "^0.12.7",
+    "pug": "^2.0.3",
+    "pug-cli": "^1.0.0-alpha6"
   },
   "devDependencies": {
     "@types/mocha": "2.2.41",

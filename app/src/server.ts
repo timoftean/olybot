@@ -8,6 +8,7 @@ import * as mongoose from 'mongoose'
 import * as passport from 'passport'
 import * as GitLabStrategy from 'passport-gitlab2'
 import * as session from 'express-session'
+import * as path from 'path'
 
 import { config } from './config'
 import { router } from './routes'
@@ -69,7 +70,9 @@ export class Server {
         this.app.use(passport.initialize())
         this.app.use(passport.session())
         this.app.use(router)
-
+        this.app.set('view engine', 'pug')
+        this.app.set("views", path.join(__dirname, "../src/templates"))
+        this.app.use('/', express.static(path.join(__dirname, 'javascripts')))
         passport.use(new GitLabStrategy({
                 clientID: config.GITLAB.APPLICATION_ID,
                 clientSecret: config.GITLAB.SECRET,
