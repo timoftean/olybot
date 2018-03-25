@@ -8,12 +8,10 @@ import * as mongoose from 'mongoose'
 import * as passport from 'passport'
 import * as GitLabStrategy from 'passport-gitlab2'
 import * as session from 'express-session'
-import * as path from 'path'
 
 import { config } from './config'
 import { router } from './routes'
 import { startRTM } from './slack'
-import {gitlabAuth} from './hooks/gitlabAuth'
 
 export class Server {
 
@@ -70,14 +68,15 @@ export class Server {
         this.app.use(passport.initialize())
         this.app.use(passport.session())
         this.app.use(router)
-        this.app.set('view engine', 'pug')
-        this.app.set("views", path.join(__dirname, "../src/templates"))
-        this.app.use('/', express.static(path.join(__dirname, 'javascripts')))
+
         passport.use(new GitLabStrategy({
                 clientID: config.GITLAB.APPLICATION_ID,
                 clientSecret: config.GITLAB.SECRET,
                 callbackURL: "http://localhost:3000/auth/gitlab/callback"
-            }, gitlabAuth
+            }, (accessToken, refreshToken, profile, cb) => {
+                profile.access_token = accessToken
+                return cb(null, profile)
+            }
         ))
 
         this.app.use((req, res, next): void => {

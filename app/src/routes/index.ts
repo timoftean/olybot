@@ -1,8 +1,7 @@
 import * as passport from 'passport'
 import { Router } from 'express'
 import { slackInteract, gitlabHook } from '../hooks'
-import { gitlabCallback } from '../hooks/gitlabAuth'
-import {gitlabUserProjects} from "../hooks/gitlabProjects";
+import { gitlabCallback } from '../hooks/gitlabAuthCallback'
 
 const router = Router()
 
@@ -32,7 +31,6 @@ router.get('/auth/gitlab/callback',
 
 router.get('/login', (req, res) => res.send('unauthenticated'))
 
-router.get('/gitlab/userProjects/:gitlabUserId', gitlabUserProjects)
 //-------------
 //slack webhook|
 //-------------

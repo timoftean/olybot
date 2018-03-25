@@ -1,9 +1,3 @@
-import { startRTM } from './rtmClient'
-import { sendMessageToUser, sendMessageObj, updateUserWithSlack } from './webClient'
-
-export {
-    startRTM,
-    sendMessageObj,
-    sendMessageToUser,
-    updateUserWithSlack
-}
+export { startRTM } from './rtmClient'
+export { sendMessageToUser, sendMessageObj, updateUserWithSlack } from './webClient'
+export { sendUserProjectConfirmation } from './interactions'
