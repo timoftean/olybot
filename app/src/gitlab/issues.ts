@@ -1,5 +1,4 @@
 import fetch from 'node-fetch'
-import { config } from '../config'
 
 const getIssues = async (user, opts) => {
     const { gitlabUserId, issue_state, issue_scope } = opts

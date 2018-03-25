@@ -1,5 +1,6 @@
 export const config = {
     PORT: process.env.API_PORT || 3000,
+    HOST: process.env.HOST,
     MONGODB: {
         PORT: process.env.MONGODB_PORT,
         SERVER: process.env.MONGODB_SERVER,
