@@ -9,7 +9,9 @@ export interface User {
     slackDmId: string
     displayName: string,
     gitlabUserId: number,
-    gitlabUsername: string
+    gitlabUsername: string,
+    gitlabProjectid: number,
+    isGitlabSubscribed: boolean
 }
 
 const UserSchema = new Schema({
@@ -21,6 +23,12 @@ const UserSchema = new Schema({
     },
     gitlab_access_token: {
         type: String
+    },
+    gitlabProjectId: {
+        type: Schema.Types.Number
+    },
+    isGitlabSubscribed: {
+        type: Schema.Types.Boolean
     },
     slackId: {
         type: String,
