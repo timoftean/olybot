@@ -1,4 +1,4 @@
-import { getIssues } from '../../gitlab/issues'
+import { getIssues, createIssue } from '../../gitlab'
 
 const processAttachments = (issues) => {
     return issues.map(issue => {
@@ -16,6 +16,11 @@ const processAttachments = (issues) => {
             "short": true
         })
 
+        fields.push({
+            "title": "Issue number",
+            "value": issue.iid,
+            "short": true
+        })
         return {
             color: "#36a64f",
             title: issue.title,
@@ -29,22 +34,7 @@ const processAttachments = (issues) => {
     })
 }
 
-const processGetMyIssues = async (user, options) => {
-    let attachments = []
-    let text = ''
-
-    const issues =  await getIssues(user, options)
-    if (issues.length === 0 ) {
-        text = 'There are no issues at the moment'
-    } else {
-        text = 'Here are the issues you are searching for'
-        attachments = processAttachments(issues)
-    }
-
-    return { attachments, text }
-}
-
-const processGetAllIssues = async (user, options) => {
+const processGetIssues = async (user, options) => {
     let attachments = []
     let text = ''
 
@@ -62,7 +52,17 @@ const processGetAllIssues = async (user, options) => {
     return { attachments, text }
 }
 
+const processCreateIssues = async (user, options) => {
+    const response =  await createIssue(user, options)
+    console.log("RESPONSE create issues", response)
+    if (response.error) {
+        return 'There was a problem creating the issue'
+    } else {
+        return 'Issue created successfully'
+    }
+}
+
 export {
-    processGetAllIssues,
-    processGetMyIssues
+    processGetIssues,
+    processCreateIssues
 }

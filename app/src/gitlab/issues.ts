@@ -1,7 +1,7 @@
 import fetch from 'node-fetch'
 
 const getIssues = async (user, opts) => {
-    const { gitlabUserId, issue_state, issue_scope } = opts
+    const { issue_state, issue_scope } = opts
     const { gitlab_access_token, gitlabProjectId } = user
     let uri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues?access_token=${gitlab_access_token}`
     console.log("USER:", user)
@@ -17,6 +17,24 @@ const getIssues = async (user, opts) => {
     return await res.json()
 }
 
+const createIssue = async (user, opts) => {
+    const { issue_title } = opts
+    const { gitlab_access_token, gitlabProjectId } = user
+    let uri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues?access_token=${gitlab_access_token}`
+
+    const postData = {
+        id: gitlabProjectId,
+        title: issue_title
+    }
+
+    const res = await fetch(uri, {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'POST',
+        body: JSON.stringify(postData)
+    })
+    return await res.json()
+}
 export {
     getIssues,
+    createIssue
 }

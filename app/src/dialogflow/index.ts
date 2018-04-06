@@ -1,6 +1,6 @@
 import { sendMessageToUser } from '../slack'
 import { request } from './request'
-import { processGetAllIssues, processGetMyIssues } from './intents/issues'
+import { processGetIssues, processCreateIssues } from './intents/issues'
 import { sendUserProjectConfirmation } from "../slack/interactions"
 
 const dialogFlowProcessor = async (user, message) => {
@@ -10,9 +10,10 @@ const dialogFlowProcessor = async (user, message) => {
 
     const { result } = dialogFlowResponse
     if (result.actionIncomplete) {
-        await sendMessageToUser(user, result.fulfillment.speech)
+        await sendMessageToUser(message.channel, result.fulfillment.speech)
     } else {
 
+        //allow user smalltalk and welcome messages before asking to login or select project
         if (result.metadata.intentName &&
             result.metadata.intentName.indexOf('Default') === -1 &&
             result.action.indexOf('smalltalk') === -1
@@ -26,20 +27,17 @@ const dialogFlowProcessor = async (user, message) => {
 
         switch (result.metadata.intentName) {
             case 'issues.getAll': {
-                const { contexts } = result
-                console.log('CONTEXTS:', contexts)
                 const { issue_state, issue_scope } = result.parameters
                 const { gitlabUserId } = user
 
-                const { attachments, text }  = await processGetAllIssues(user, { issue_state, issue_scope, gitlabUserId })
+                const { attachments, text }  = await processGetIssues(user, { issue_state, issue_scope, gitlabUserId })
                 console.log('PARAMETERS', text, issue_state, issue_scope, gitlabUserId)
                 await sendMessageToUser(message.channel, text, attachments)
                 break
             }
 
-            case 'issues.getMines': {
-                const { gitlabUserId } = user
-                const { attachments, text }  = await processGetMyIssues(user,{ gitlabUserId })
+            case 'issues.getAssignedToMe': {
+                const { attachments, text }  = await processGetIssues(user,{ issue_scope: 'assigned to me', issue_state: 'opened' })
                 await sendMessageToUser(message.channel, text, attachments)
                 break
             }
@@ -48,7 +46,7 @@ const dialogFlowProcessor = async (user, message) => {
                 const context = result.contexts[0]
                 const { issue_state, issue_scope } = context.parameters
 
-                const { attachments, text }  = await processGetAllIssues(user, { issue_state, issue_scope })
+                const { attachments, text }  = await processGetIssues(user, { issue_state, issue_scope })
                 await sendMessageToUser(message.channel, text, attachments)
                 break
             }
@@ -57,8 +55,16 @@ const dialogFlowProcessor = async (user, message) => {
                 const context = result.contexts[0]
                 const { issue_state, issue_scope } = context.parameters
 
-                const { attachments, text }  = await processGetAllIssues(user, { issue_state, issue_scope })
+                const { attachments, text }  = await processGetIssues(user, { issue_state, issue_scope })
                 await sendMessageToUser(message.channel, text, attachments)
+                break
+            }
+
+            case 'issues.create': {
+                const { issue_title } = result.parameters
+
+                const text  = await processCreateIssues(user, { issue_title })
+                await sendMessageToUser(message.channel, text)
                 break
             }
 
