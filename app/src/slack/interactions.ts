@@ -1,5 +1,5 @@
-import {getUserProjects} from "../gitlab/user";
-import {sendMessageObj} from "./webClient";
+import { getUserProjects } from "../gitlab/user"
+import { sendMessageObj } from "./webClient"
 
 export const sendUserProjectConfirmation = async (user) => {
     const projects = await getUserProjects(user)

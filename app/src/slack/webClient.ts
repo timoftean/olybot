@@ -3,6 +3,13 @@ import { config } from '../config'
 const botToken = config.SLACK.BOT_ACCESS_TOKEN
 const slackWebClient = new WebClient(botToken)
 
+// todo: find a method to take info about all channels
+// slackWebClient.channels.info('D8DABTS6A')
+//     .then((res) => {
+//         console.log('res/channels', res)
+//     })
+//     .catch(err => console.error('channel error:', err))
+
 
 /*
   sendMessage()
@@ -14,7 +21,7 @@ const slackWebClient = new WebClient(botToken)
 */
 const sendMessageToUser = async (channel, message, attachments?) => {
     const res = await slackWebClient.chat.postMessage(channel, message, { attachments })
-    console.log(`MESSAGE ${message} SENT TO CHANNEL ${channel} WITH RESPONSE ${res}`)
+    console.log(`MESSAGE ${message} SENT TO CHANNEL ${channel} WITH RESPONSE ok:${JSON.stringify(res.ok)}`)
 }
 
 /*

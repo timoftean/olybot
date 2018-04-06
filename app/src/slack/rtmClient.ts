@@ -12,11 +12,12 @@ rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, (rtmStartData) => {
 
 rtm.on(RTM_EVENTS.MESSAGE, async (message) => {
     try {
-        console.log("MESSAGE FROM SLACK: ", message)
-        if (message.bot_id || message.subtype === 'message_changed') {
-            // ignoring bot messages
+        // Skip messages that are from a bot or my own user ID
+        if ( (message.subtype && message.subtype === 'bot_message') ||
+            (!message.subtype && message.user === rtm.activeUserId) ) {
             return
         }
+        console.log(`(channel:${message.channel}) ${message.user} says: ${message.text}`);
 
         let user = await userController.findOneOrCreateWithSlackId({ slackId: message.user })
         if (!user.slackDmId) {

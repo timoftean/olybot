@@ -11,9 +11,9 @@ services:
     volumes:
       - './app/:/wrk'
     depends_on:
-      - mongodb
-  mongodb:
-    container_name: mongodb
+      - mongo
+  mongo:
+    container_name: mongo
     image: 'mongo:3.6.2'
     volumes:
       - 'db-data:/var/lib/mongodb'
