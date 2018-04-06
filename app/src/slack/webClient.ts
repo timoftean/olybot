@@ -19,9 +19,12 @@ const slackWebClient = new WebClient(botToken)
   returns:
     undefined
 */
-const sendMessageToUser = async (channel, message, attachments?) => {
-    const res = await slackWebClient.chat.postMessage(channel, message, { attachments })
-    console.log(`MESSAGE ${message} SENT TO CHANNEL ${channel} WITH RESPONSE ok:${JSON.stringify(res.ok)}`)
+const sendMessageToUser = async (channel, text, attachments?) => {
+    attachments = JSON.stringify(attachments)
+    console.log(`MESSAGE ${text} SENT TO CHANNEL ${channel}`)
+    const res = await slackWebClient.chat.postMessage({channel, text, attachments })
+    console.log(`WITH RESPONSE ok:${JSON.stringify(res.ok)}`)
+
 }
 
 /*

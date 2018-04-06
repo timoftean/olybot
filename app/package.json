@@ -16,7 +16,7 @@
   "author": "Timofte Alexandru",
   "license": "ISC",
   "dependencies": {
-    "@slack/client": "^3.16.0",
+    "@slack/client": "^4.1.0",
     "@types/node": "7.0.22",
     "body-parser": "^1.18.2",
     "concurrently": "^3.5.1",

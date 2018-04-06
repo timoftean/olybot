@@ -1,16 +1,16 @@
-import { RtmClient, CLIENT_EVENTS, RTM_EVENTS } from '@slack/client'
+import { RTMClient } from '@slack/client'
 import { userController } from '../modules/user/controller'
 import { config } from '../config'
 import { dialogFlowProcessor } from '../dialogflow'
 
 const botToken = config.SLACK.BOT_ACCESS_TOKEN
-const rtm = new RtmClient(botToken)
+const rtm = new RTMClient(botToken)
 
-rtm.on(CLIENT_EVENTS.RTM.AUTHENTICATED, (rtmStartData) => {
+rtm.on('authenticated', (rtmStartData) => {
     console.log(`Logged in as ${rtmStartData.self.name} of team ${rtmStartData.team.name}!`)
 })
 
-rtm.on(RTM_EVENTS.MESSAGE, async (message) => {
+rtm.on('message', async (message) => {
     try {
         // Skip messages that are from a bot or my own user ID
         if ( (message.subtype && message.subtype === 'bot_message') ||
