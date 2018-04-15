@@ -32,5 +32,5 @@ rtm.on('message', async (message) => {
 })
 
 export const startRTM = () => {
-    rtm.start()
+    rtm.start({})
 }

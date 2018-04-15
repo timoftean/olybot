@@ -35,8 +35,8 @@ const sendMessageToUser = async (channel, text, attachments?) => {
   returns:
     undefined
 */
-const sendMessageObj = (channelId, messageObj) => {
-    slackWebClient.chat.postMessage(channelId, null, messageObj);
+const sendMessageObj = (data) => {
+    slackWebClient.chat.postMessage(data)
 }
 
 /*
@@ -65,7 +65,7 @@ const sendMessageObj = (channelId, messageObj) => {
             is_bot: false,
           }
 */
-const pullInfoFromSlackId = async slackId => await (slackWebClient.users.info(slackId))
+const pullInfoFromSlackId = async slackId => await (slackWebClient.users.info({user: slackId}))
 
 /*
     findSlackDmId()
@@ -83,7 +83,7 @@ const pullInfoFromSlackId = async slackId => await (slackWebClient.users.info(sl
           acceptedScopes: [ 'im:write', 'post' ]
         }
 */
-const findSlackDmId = async slackId => await (slackWebClient.im.open(slackId))
+const findSlackDmId = async slackId => await (slackWebClient.im.open({user: slackId}))
 
 /*
     updateUserWithSlack()
@@ -99,7 +99,7 @@ const findSlackDmId = async slackId => await (slackWebClient.im.open(slackId))
 const updateUserWithSlack = async (userToUpdate) => {
     let user = userToUpdate
     let res = await pullInfoFromSlackId(user.slackId)
-
+    console.log('USER FORM SLACK:', res.user)
     const userData = res.user
     user.slackUsername = userData.name
     user.slackEmail = userData.profile.email
@@ -107,6 +107,7 @@ const updateUserWithSlack = async (userToUpdate) => {
     user = await user.save()
 
     res = await findSlackDmId(user.slackId)
+    console.log('SLACK DMId:', res)
     user.slackDmId = res.channel.id
     return await user.save()
 }

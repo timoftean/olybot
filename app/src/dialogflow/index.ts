@@ -79,6 +79,7 @@ const dialogFlowProcessor = async (user, message) => {
 export const processAndSendTextIfNotLoggedIng = async (channel, user) => {
     const text = `Please first connect to Gitlab account by visiting http://localhost:3000/gitlab/auth/${user.slackId}`
     if (!user.gitlabUserId) {
+        // todo: send direct message to auth
         await sendMessageToUser(channel, text)
         return true
     }
