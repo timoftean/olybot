@@ -22,8 +22,9 @@ export const sendUserProjectConfirmation = async (user) => {
     })
 
     sendMessageObj(
-        user.slackDmId,
         { // begin attachment object
+            channel: user.slackDmId,
+            text: 'Project confirmation',
             attachments: [{
                 callback_id: 'confirm_project',
                 text: `Please confirm on which project you want to work from now on.`,
