@@ -8,9 +8,7 @@
     "dev": "tsc --watch & nodemon dist",
     "test": "tsc && mocha dist/**/*.test.js",
     "lint": "eslint src --ext ts",
-    "tsc": "tsc",
-    "pug": "pug src/templates/",
-    "pug:w": "pug src/templates/projects.pug --out dist/templates/ --watch"
+    "tsc": "tsc"
   },
   "keywords": [],
   "author": "Timofte Alexandru",
@@ -21,6 +19,7 @@
     "body-parser": "^1.18.2",
     "concurrently": "^3.5.1",
     "cors": "^2.8.4",
+    "dotenv": "^5.0.1",
     "express": "4.15.3",
     "express-session": "^1.15.6",
     "http": "0.0.0",
