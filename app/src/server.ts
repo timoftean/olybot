@@ -91,10 +91,13 @@ export class Server {
     }
 
     private async createMongooseConnection () {
+        const user = config.MONGODB.USER
         const port = config.MONGODB.PORT
         const server = config.MONGODB.SERVER
         const dbName = config.MONGODB.DATABASE
+        const password = config.MONGODB.PASSWORD
         const uri = `mongodb://${server}:${port}/${dbName}`
+        // const uri = `mongodb://${user}:${password}@cluster0-shard-00-00-m88nf.mongodb.net:27017,cluster0-shard-00-01-m88nf.mongodb.net:27017,cluster0-shard-00-02-m88nf.mongodb.net:27017/${dbName}?ssl=true&replicaSet=Cluster0-shard-0&authSource=admin`
         mongoose.connect(uri)
 
         const connection = mongoose.connection

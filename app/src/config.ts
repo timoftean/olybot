@@ -1,10 +1,12 @@
 export const config = {
-    PORT: process.env.API_PORT || 3000,
+    PORT: process.env.APP_PORT || 3000,
     HOST: process.env.HOST,
     MONGODB: {
         PORT: process.env.MONGODB_PORT,
         SERVER: process.env.MONGODB_SERVER,
-        DATABASE: process.env.MONGODB_DATABASE
+        DATABASE: process.env.MONGODB_DATABASE,
+        USER: process.env.MONGODB_USER,
+        PASSWORD: process.env.MONGODB_PASSWORD
     },
     DIALOGFLOW: {
         CLIENT_ACCESS_TOKEN: process.env.NLP_CLIENT_ACCESS_TOKEN,
