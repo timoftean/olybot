@@ -1,7 +1,14 @@
 import { sendMessageToUser } from '../slack'
 import { request } from './request'
 import { processGetIssues, processCreateIssues } from './intents/issues'
+import { processGetIssues,
+    processCreateIssues,
+    processSetIssueLabel,
+    processAddAsignee,
+    processRemoveAsignee
+} from './intents/issues'
 import { sendUserProjectConfirmation } from "../slack/interactions"
+import { userController } from '../modules/user/controller'
 
 const dialogFlowProcessor = async (user, message) => {
     console.log('DIALOGFLOW PROCESSOR: \n user:', user,'\n message:', message)
@@ -64,6 +71,14 @@ const dialogFlowProcessor = async (user, message) => {
                 const { issue_title } = result.parameters
 
                 const text  = await processCreateIssues(user, { issue_title })
+                await sendMessageToUser(message.channel, text)
+                break
+            }
+
+            case 'issues.setLabel': {
+                const { issue_number, issue_label } = result.parameters
+                await sendMessageToUser(message.channel, 'alright :)')
+                const text  = await processSetIssueLabel(user, { issue_number, issue_label })
                 await sendMessageToUser(message.channel, text)
                 break
             }

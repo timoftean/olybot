@@ -54,15 +54,29 @@ const processGetIssues = async (user, options) => {
 
 const processCreateIssues = async (user, options) => {
     const response =  await createIssue(user, options)
-    console.log("RESPONSE create issues", response)
+    const { issue_title } = options
     if (response.error) {
         return 'There was a problem creating the issue'
     } else {
-        return 'Issue created successfully'
+        return `Issue '${issue_title}' created successfully`
+    }
+}
+
+const processSetIssueLabel = async (user, options) => {
+    const response =  await setIssueLabel(user, options)
+    const { issue_number, issue_label } = options
+
+    if (response.error) {
+        return 'There was a problem adding the label'
+    } else {
+        return `Label '${issue_label}' added successfully to issue ${issue_number}`
     }
 }
 
 export {
     processGetIssues,
-    processCreateIssues
+    processCreateIssues,
+    processSetIssueLabel,
+    processRemoveAsignee,
+    processAddAsignee
 }

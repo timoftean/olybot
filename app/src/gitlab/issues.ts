@@ -1,4 +1,5 @@
 import fetch from 'node-fetch'
+import { Project, GitlabUser } from '../typings'
 
 const getIssues = async (user, opts) => {
     const { issue_state, issue_scope } = opts
@@ -34,7 +35,33 @@ const createIssue = async (user, opts) => {
     })
     return await res.json()
 }
+
+const setIssueLabel = async (user, opts) => {
+    let { issue_number, issue_label } = opts
+    const { gitlab_access_token, gitlabProjectId } = user
+    let uri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
+
+    issue_label = issue_label
+        .map(i => i.replace(',', ''))
+        .join(',')
+        //make first letter capital
+        .replace(/\w\S*/g, (txt) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase() )
+
+    const postData = {
+        labels: issue_label
+    }
+
+    const res = await fetch(uri, {
+        headers: { 'Content-Type': 'application/json' },
+        method: 'PUT',
+        body: JSON.stringify(postData)
+    })
+
+    return await res.json()
+}
+
 export {
     getIssues,
     createIssue
+    setIssueLabel,
 }
