@@ -1,6 +1,5 @@
 import { sendMessageToUser } from '../slack'
 import { request } from './request'
-import { processGetIssues, processCreateIssues } from './intents/issues'
 import { processGetIssues,
     processCreateIssues,
     processSetIssueLabel,
@@ -36,7 +35,7 @@ const dialogFlowProcessor = async (user, message) => {
             case 'issues.getAll': {
                 const { issue_state, issue_scope } = result.parameters
                 const { gitlabUserId } = user
-
+                await sendMessageToUser(message.channel, 'wait a moment :)')
                 const { attachments, text }  = await processGetIssues(user, { issue_state, issue_scope, gitlabUserId })
                 console.log('PARAMETERS', text, issue_state, issue_scope, gitlabUserId)
                 await sendMessageToUser(message.channel, text, attachments)
@@ -52,7 +51,7 @@ const dialogFlowProcessor = async (user, message) => {
             case 'issues - context:issues.getAll - comment:issue_state': {
                 const context = result.contexts[0]
                 const { issue_state, issue_scope } = context.parameters
-
+                await sendMessageToUser(message.channel, 'wait a sec')
                 const { attachments, text }  = await processGetIssues(user, { issue_state, issue_scope })
                 await sendMessageToUser(message.channel, text, attachments)
                 break
@@ -61,7 +60,7 @@ const dialogFlowProcessor = async (user, message) => {
             case 'issues - context:issues.getAll - comment:issue_scope': {
                 const context = result.contexts[0]
                 const { issue_state, issue_scope } = context.parameters
-
+                await sendMessageToUser(message.channel, 'just a sec')
                 const { attachments, text }  = await processGetIssues(user, { issue_state, issue_scope })
                 await sendMessageToUser(message.channel, text, attachments)
                 break
@@ -69,7 +68,7 @@ const dialogFlowProcessor = async (user, message) => {
 
             case 'issues.create': {
                 const { issue_title } = result.parameters
-
+                await sendMessageToUser(message.channel, 'alright :)')
                 const text  = await processCreateIssues(user, { issue_title })
                 await sendMessageToUser(message.channel, text)
                 break
@@ -94,6 +93,20 @@ const dialogFlowProcessor = async (user, message) => {
 
                 await sendMessageToUser(message.channel, 'wait a moment')
                 const text  = await processAddAsignee(user, { issue_number, asignee })
+                await sendMessageToUser(message.channel, text)
+                break
+            }
+
+            case 'issues.removeAsignee': {
+                const { issue_number, user_slack_id } = result.parameters
+                const asignee = await userController.find({slackId: user_slack_id})
+                console.log('ASIGNEE:', user_slack_id, asignee)
+                if (!asignee || !(asignee.gitlabProjectId && asignee.gitlabUserId) ) {
+                    await sendMessageToUser(message.channel, 'cannot unassign: assignee must be signed in with gitlab ')
+                    break
+                }
+                await sendMessageToUser(message.channel, 'right now')
+                const text  = await processRemoveAsignee(user, { issue_number, asignee })
                 await sendMessageToUser(message.channel, text)
                 break
             }

@@ -85,6 +85,18 @@ const processAddAsignee = async (user, options) => {
     }
 }
 
+const processRemoveAsignee = async (user, options) => {
+    const response =  await removeAsignee(user, options)
+    const { issue_number, asignee } = options
+    const { slackId } = asignee
+
+    if (response.error) {
+        return 'There was a problem unassigning user'
+    } else {
+        return `User <@${slackId}> was unassign successfully from issue ${issue_number}`
+    }
+}
+
 export {
     processGetIssues,
     processCreateIssues,

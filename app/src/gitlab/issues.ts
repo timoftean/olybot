@@ -90,6 +90,37 @@ const addAsignee = async (user, opts) => {
     }
 }
 
+const removeAsignee = async (user, opts) => {
+    const { issue_number, asignee } = opts
+    const { gitlabUserId } = asignee
+    const { gitlab_access_token, gitlabProjectId } = user
+    let projectUri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
+    let addAsigneeUri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
+
+
+    const response = await fetch(projectUri)
+    const projectJson: Project = await response.json()
+    const asignees: Array<number> = []
+    projectJson.assignees.map((user: GitlabUser) => {
+        console.log('userId', gitlabUserId, user)
+        if (user.id !== gitlabUserId) asignees.push(user.id)
+    })
+
+    try {
+        const res = await fetch(addAsigneeUri, {
+            headers: { 'Content-Type': 'application/json' },
+            method: 'PUT',
+            body: JSON.stringify({assignee_ids: asignees})
+        })
+        const json =  await res.json()
+        console.log('remove asignee:', asignees, json)
+        if (json.message) return { error: json.message }
+        return json
+    } catch (e: Error) {
+        return { error: e.message }
+    }
+}
+
 export {
     getIssues,
     createIssue,
