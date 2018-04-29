@@ -10,10 +10,10 @@ npm run dev
 npm run lint
 ```
 
-### Building a container
+### Running with docker
 
 ```bash
-docker build .
+docker-compose up
 ```
 
 
