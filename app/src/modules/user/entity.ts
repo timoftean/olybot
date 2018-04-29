@@ -10,7 +10,7 @@ export interface User {
     displayName: string,
     gitlabUserId: number,
     gitlabUsername: string,
-    gitlabProjectid: number,
+    gitlabProjectId: number,
     isGitlabSubscribed: boolean
 }
 
