@@ -60,8 +60,40 @@ const setIssueLabel = async (user, opts) => {
     return await res.json()
 }
 
+const addAsignee = async (user, opts) => {
+    const { issue_number, asignee } = opts
+    const { gitlabUserId } = asignee
+    const { gitlab_access_token, gitlabProjectId } = user
+    let projectUri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
+    let addAsigneeUri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
+
+    const asignees: Array<number> = [gitlabUserId]
+    const response = await fetch(projectUri)
+
+    const projectJson: Project = await response.json()
+    projectJson.assignees.map((user: GitlabUser) => {
+        asignees.push(user.id)
+    })
+
+    try {
+        const res = await fetch(addAsigneeUri, {
+            headers: { 'Content-Type': 'application/json' },
+            method: 'PUT',
+            body: JSON.stringify({assignee_ids: asignees})
+        })
+        const json =  await res.json()
+
+        if (json.message) return { error: json.message }
+        return json
+    } catch (e: Error) {
+        return { error: e.message }
+    }
+}
+
 export {
     getIssues,
-    createIssue
+    createIssue,
     setIssueLabel,
+    addAsignee,
+    removeAsignee
 }

@@ -1,4 +1,4 @@
-import { getIssues, createIssue } from '../../gitlab'
+import { getIssues, createIssue, setIssueLabel, addAsignee, removeAsignee } from '../../gitlab'
 
 const processAttachments = (issues) => {
     return issues.map(issue => {
@@ -70,6 +70,18 @@ const processSetIssueLabel = async (user, options) => {
         return 'There was a problem adding the label'
     } else {
         return `Label '${issue_label}' added successfully to issue ${issue_number}`
+    }
+}
+
+const processAddAsignee = async (user, options) => {
+    const response =  await addAsignee(user, options)
+    const { issue_number, asignee } = options
+    const { slackId } = asignee
+
+    if (response.error) {
+        return 'There was a problem assigning user'
+    } else {
+        return `User <@${slackId}> was assigned successfully to issue ${issue_number}`
     }
 }
 

@@ -83,6 +83,21 @@ const dialogFlowProcessor = async (user, message) => {
                 break
             }
 
+            case 'issues.addAsignee': {
+                const { issue_number, user_slack_id } = result.parameters
+                const asignee = await userController.find({slackId: user_slack_id})
+                console.log('ASIGNEE:', user_slack_id, asignee)
+                if (!asignee || !(asignee.gitlabProjectId && asignee.gitlabUserId) ) {
+                    await sendMessageToUser(message.channel, 'cannot assign issue: assignee must be signed in with gitlab ')
+                    break
+                }
+
+                await sendMessageToUser(message.channel, 'wait a moment')
+                const text  = await processAddAsignee(user, { issue_number, asignee })
+                await sendMessageToUser(message.channel, text)
+                break
+            }
+
             default: {
                 // was not caught by a meaningful intent, just send speech
                 await sendMessageToUser(message.channel, result.fulfillment.speech)
