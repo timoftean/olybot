@@ -14,7 +14,9 @@ rtm.on('message', async (message) => {
     try {
         // Skip messages that are from a bot or my own user ID
         if ( (message.subtype && message.subtype === 'bot_message') ||
-            (!message.subtype && message.user === rtm.activeUserId) ) {
+            (message.subtype && message.subtype === 'channel_join') ||
+            (!message.subtype && message.user === rtm.activeUserId) ||
+            (message.message && message.message.subtype && message.message.subtype === 'bot_message') ) {
             return
         }
         console.log(`(channel:${message.channel}) ${message.user} says: ${message.text}`);
