@@ -83,7 +83,7 @@ const processSetIssueLabel = async (user: User, options: any) => {
 }
 
 const processRemoveIssueLabel = async (user: User, options: any) => {
-    const response =  await GitlabIssues.setIssueLabel(user, options)
+    const response =  await GitlabIssues.removeIssueLabel(user, options)
     const { issue_number, issue_label } = options
 
     if (response.error) {

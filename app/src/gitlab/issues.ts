@@ -62,15 +62,23 @@ export default class GitlabIssues {
     }
 
     static async removeIssueLabel(user: User, opts: Issue) {
-        let { issue_number, issue_label: issues_labels } = opts
+        let { issue_number, issue_label } = opts
         const { gitlab_access_token, gitlabProjectId } = user
         let uri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
 
-        const labels = issues_labels
-            .map((label: string) => label.replace(',', ''))
-            .join(',')
-            //make first letter capital
+        const response = await fetch(uri)
+        const issueJson = await response.json()
+
+        //take first label and make first letters capital
+        const labelToRemove: string =
+            issue_label[0]
             .replace(/\w\S*/g, (txt: string) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase() )
+
+        const labels: string = issueJson.labels
+            .filter((label: string) => {
+                return label !== labelToRemove
+            })
+            .join(', ')
 
         const postData = { labels }
 
@@ -135,7 +143,7 @@ export default class GitlabIssues {
                 body: JSON.stringify({assignee_ids: asignees})
             })
             const json =  await res.json()
-            console.log('remove asignee:', asignees, json)
+
             if (json.message) return { error: json.message }
             return json
         } catch (e) {
