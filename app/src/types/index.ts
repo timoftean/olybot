@@ -1,6 +1,9 @@
+import {User} from "../modules/user/entity"
+
 export interface Project {
     id: number,
     iid: number,
+    name: string,
     project_id: number,
     title: string,
     description: string,
@@ -20,4 +23,13 @@ export interface GitlabUser {
     state: string,
     avatar_url: string,
     web_url: string
+}
+
+export interface Issue {
+    issue_state?: string,
+    issue_scope?: string,
+    issue_title?: string,
+    issue_label?: string[],
+    issue_number?: number,
+    asignee?: User,
 }
