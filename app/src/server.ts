@@ -45,11 +45,11 @@ export class Server {
     }
 
     private serializeUser() {
-        passport.serializeUser(function(user, done) {
+        passport.serializeUser((user, done) => {
             done(null, user);
         })
 
-        passport.deserializeUser(function(user, done) {
+        passport.deserializeUser((user, done) =>{
             done(null, user);
         })
     }
@@ -73,7 +73,7 @@ export class Server {
                 clientID: config.GITLAB.APPLICATION_ID,
                 clientSecret: config.GITLAB.SECRET,
                 callbackURL: "http://localhost:3000/auth/gitlab/callback"
-            }, (accessToken, refreshToken, profile, cb) => {
+            }, (accessToken: string, refreshToken: string, profile: any, cb: (error: string, profile: object)=>{}) => {
                 profile.access_token = accessToken
                 return cb(null, profile)
             }
@@ -101,7 +101,7 @@ export class Server {
         mongoose.connect(uri)
 
         const connection = mongoose.connection
-        connection.on('error', (error) => {
+        connection.on('error', (error: object) => {
             console.log("MONGO CONNECTION ERROR: ", error)
         })
         connection.once('open', () => {

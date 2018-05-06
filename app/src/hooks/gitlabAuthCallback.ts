@@ -1,8 +1,9 @@
-import { UserModel } from '../modules/user/entity'
+import * as express from 'express'
+import {User, UserModel} from '../modules/user/entity'
 import { sendMessageToUser } from "../slack/webClient"
-import { sendUserProjectConfirmation } from "../slack/interactions"
+import { SlackInteractions } from "../slack"
 
-export const gitlabCallback = async (req, res) => {
+export const gitlabCallback = async (req: express.Request, res: express.Response) => {
     const { state } = req.query
     const { access_token, id, username } = req.user
 
@@ -20,7 +21,7 @@ export const gitlabCallback = async (req, res) => {
     sendMessageToUser(user.slackDmId, 'Successfully integrated with Gitlab!')
 
     //ask the user on which project he wants to work
-    sendUserProjectConfirmation(user)
+    SlackInteractions.sendUserProjectConfirmation(user)
 
     res.send('Successfully integrated with Gitlab!')
 }

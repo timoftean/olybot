@@ -1,5 +1,6 @@
 import { WebClient } from '@slack/client'
 import { config } from '../config'
+
 const botToken = config.SLACK.BOT_ACCESS_TOKEN
 const slackWebClient = new WebClient(botToken)
 
@@ -19,7 +20,7 @@ const slackWebClient = new WebClient(botToken)
   returns:
     undefined
 */
-const sendMessageToUser = async (channel, text, attachments?) => {
+const sendMessageToUser = async (channel: string, text: string, attachments?: any) => {
     attachments = JSON.stringify(attachments)
     console.log(`MESSAGE ${text} SENT TO CHANNEL ${channel}`)
     const res = await slackWebClient.chat.postMessage({channel, text, attachments })
@@ -35,7 +36,7 @@ const sendMessageToUser = async (channel, text, attachments?) => {
   returns:
     undefined
 */
-const sendMessageObj = (data) => {
+const sendMessageObj = (data: any) => {
     slackWebClient.chat.postMessage(data)
 }
 
@@ -65,7 +66,7 @@ const sendMessageObj = (data) => {
             is_bot: false,
           }
 */
-const pullInfoFromSlackId = async slackId => await (slackWebClient.users.info({user: slackId}))
+const pullInfoFromSlackId = async (slackId: string) => await (slackWebClient.users.info({user: slackId}))
 
 /*
     findSlackDmId()
@@ -83,7 +84,7 @@ const pullInfoFromSlackId = async slackId => await (slackWebClient.users.info({u
           acceptedScopes: [ 'im:write', 'post' ]
         }
 */
-const findSlackDmId = async slackId => await (slackWebClient.im.open({user: slackId}))
+const findSlackDmId = async (slackId: string) => await (slackWebClient.im.open({user: slackId}))
 
 /*
     updateUserWithSlack()
@@ -96,19 +97,17 @@ const findSlackDmId = async slackId => await (slackWebClient.im.open({user: slac
             (user.save() resultant Promise)
 */
 
-const updateUserWithSlack = async (userToUpdate) => {
+const updateUserWithSlack = async (userToUpdate: any) => {
     let user = userToUpdate
-    let res = await pullInfoFromSlackId(user.slackId)
-    console.log('USER FORM SLACK:', res.user)
-    const userData = res.user
+    let { user: userData } = await pullInfoFromSlackId(user.slackId)
+
     user.slackUsername = userData.name
     user.slackEmail = userData.profile.email
     user.displayName = userData.profile.display_name || userData.real_name
     user = await user.save()
 
-    res = await findSlackDmId(user.slackId)
-    console.log('SLACK DMId:', res)
-    user.slackDmId = res.channel.id
+    const { channel } = await findSlackDmId(user.slackId)
+    user.slackDmId = channel.id
     return await user.save()
 }
 

@@ -1,7 +1,8 @@
 import fetch from 'node-fetch'
 import { config } from '../config'
+import {User} from "../modules/user/entity"
 
-export const request = async (user, message) => {
+export const request = async (user: User, message: any) => {
     try {
         const res = await fetch('https://api.dialogflow.com/v1/query?v=20150910', {
             method: 'POST',

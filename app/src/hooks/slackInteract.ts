@@ -1,12 +1,13 @@
+import { Request, Response } from 'express'
 import { UserModel } from "../modules/user/entity"
-import { registerProjectWebhook } from "../gitlab/project"
+import { GitlabProject } from "../gitlab"
 
-export const slackInteract = async (req, res) => {
+
+export const slackInteract = async (req: Request, res: Response) => {
     const payload = JSON.parse(req.body.payload)
     const { callback_id, user, actions } = payload
     const action = actions[0]
-    console.log("PAYLOAD:", payload)
-    console.log('fullfilment: ', user, callback_id, action)
+
     switch (callback_id) {
         case 'confirm_project': {
             const updatedUser = await UserModel.findOneAndUpdate(
@@ -15,10 +16,11 @@ export const slackInteract = async (req, res) => {
                     gitlabProjectId: action.value,
                     isGitlabSubscribed: true
                 },
-                {new: true})
+                {new: true}
+            )
 
             //register webhook for project
-            await registerProjectWebhook(updatedUser)
+            await GitlabProject.registerProjectWebhook(updatedUser)
 
             res.send(`Project confirmed ✅`)
             break

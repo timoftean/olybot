@@ -3,7 +3,11 @@
     "target": "es6",
     "module": "commonjs",
     "outDir": "dist",
-    "sourceMap": true
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": false,
+    "sourceMap": false,
+    "typeRoots" : ["./src/types", "./node_modules/@types"]
   },
   "files": [
     "./node_modules/@types/mocha/index.d.ts",
