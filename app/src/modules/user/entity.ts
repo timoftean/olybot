@@ -1,4 +1,4 @@
-import { Model, model, Document, Schema, Types } from "mongoose"
+import { model, Document, Schema, Types } from "mongoose"
 type ObjectId = Types.ObjectId
 
 export interface User {
@@ -11,7 +11,8 @@ export interface User {
     gitlabUserId: number,
     gitlabUsername: string,
     gitlabProjectId: number,
-    isGitlabSubscribed: boolean
+    isGitlabSubscribed: boolean,
+    gitlab_access_token: string
 }
 
 const UserSchema = new Schema({
@@ -49,4 +50,4 @@ const UserSchema = new Schema({
 })
 
 type UserType = User & Document
-export const UserModel: Model<UserType> = model<UserType>("user", UserSchema)
+export const UserModel = model<UserType>("user", UserSchema)
