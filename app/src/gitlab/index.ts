@@ -1,3 +1,5 @@
-export { getIssues, createIssue, setIssueLabel, addAsignee, removeAsignee  } from './issues'
-export { getUserProjects } from './user'
-export { registerProjectWebhook } from './project'
+import GitlabIssues from './issues'
+import GitlabProject from './project'
+import GitlabUser from './user'
+
+export { GitlabIssues, GitlabUser, GitlabProject }
