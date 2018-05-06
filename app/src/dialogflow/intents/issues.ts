@@ -1,8 +1,9 @@
-import { getIssues, createIssue, setIssueLabel, addAsignee, removeAsignee } from '../../gitlab'
+import { GitlabIssues } from '../../gitlab'
+import { User } from "../../modules/user/entity"
 
-const processAttachments = (issues) => {
+const processAttachments = (issues: any[]) => {
     return issues.map(issue => {
-        let fields = issue.labels.map(label => {
+        let fields = issue.labels.map((label: string) => {
             return {
                 "title": "Label",
                 "value": label,
@@ -21,6 +22,14 @@ const processAttachments = (issues) => {
             "value": issue.iid,
             "short": true
         })
+
+        if (issue.assignees) {
+            fields.push({
+                "title": "Assignees",
+                "value": issue.assignees.map((a: any) => a.name ).join(', ')
+            })
+        }
+
         return {
             color: "#36a64f",
             title: issue.title,
@@ -34,11 +43,11 @@ const processAttachments = (issues) => {
     })
 }
 
-const processGetIssues = async (user, options) => {
-    let attachments = []
+const processGetIssues = async (user: User, options: object) => {
+    let attachments: any[] = []
     let text = ''
 
-    const issues =  await getIssues(user, options)
+    const issues =  await GitlabIssues.getIssues(user, options)
     if (!Array.isArray(issues)) {
         text = 'There was a problem connecting to gitlab'
     }
@@ -52,8 +61,8 @@ const processGetIssues = async (user, options) => {
     return { attachments, text }
 }
 
-const processCreateIssues = async (user, options) => {
-    const response =  await createIssue(user, options)
+const processCreateIssues = async (user: User, options: any) => {
+    const response =  await GitlabIssues.createIssue(user, options)
     const { issue_title } = options
     if (response.error) {
         return 'There was a problem creating the issue'
@@ -62,8 +71,8 @@ const processCreateIssues = async (user, options) => {
     }
 }
 
-const processSetIssueLabel = async (user, options) => {
-    const response =  await setIssueLabel(user, options)
+const processSetIssueLabel = async (user: User, options: any) => {
+    const response =  await GitlabIssues.setIssueLabel(user, options)
     const { issue_number, issue_label } = options
 
     if (response.error) {
@@ -73,8 +82,19 @@ const processSetIssueLabel = async (user, options) => {
     }
 }
 
-const processAddAsignee = async (user, options) => {
-    const response =  await addAsignee(user, options)
+const processRemoveIssueLabel = async (user: User, options: any) => {
+    const response =  await GitlabIssues.setIssueLabel(user, options)
+    const { issue_number, issue_label } = options
+
+    if (response.error) {
+        return 'There was a problem removing the label'
+    } else {
+        return `Label '${issue_label}' removed successfully from issue ${issue_number}`
+    }
+}
+
+const processAddAsignee = async (user: User, options: any) => {
+    const response =  await GitlabIssues.addAsignee(user, options)
     const { issue_number, asignee } = options
     const { slackId } = asignee
 
@@ -85,8 +105,8 @@ const processAddAsignee = async (user, options) => {
     }
 }
 
-const processRemoveAsignee = async (user, options) => {
-    const response =  await removeAsignee(user, options)
+const processRemoveAsignee = async (user: User, options: any) => {
+    const response =  await GitlabIssues.removeAsignee(user, options)
     const { issue_number, asignee } = options
     const { slackId } = asignee
 
@@ -102,5 +122,6 @@ export {
     processCreateIssues,
     processSetIssueLabel,
     processRemoveAsignee,
-    processAddAsignee
+    processAddAsignee,
+    processRemoveIssueLabel
 }
