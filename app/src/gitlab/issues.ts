@@ -39,6 +39,22 @@ export default class GitlabIssues {
         return await res.json()
     }
 
+    static async closeIssue(user: User, opts: Issue) {
+        let { issue_number } = opts
+        const { gitlab_access_token, gitlabProjectId } = user
+        let uri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
+
+        const postData = { state_event: 'closed' }
+
+        const res = await fetch(uri, {
+            headers: { 'Content-Type': 'application/json' },
+            method: 'PUT',
+            body: JSON.stringify(postData)
+        })
+
+        return await res.json()
+    }
+
     static async setIssueLabel(user: User, opts: Issue) {
         let { issue_number, issue_label: issues_labels } = opts
         const { gitlab_access_token, gitlabProjectId } = user

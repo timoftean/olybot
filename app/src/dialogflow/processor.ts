@@ -6,6 +6,7 @@ import { processGetIssues,
     processAddAsignee,
     processRemoveAsignee,
     processRemoveIssueLabel
+    processCloseIssue,
 } from './intents/issues'
 import { userController } from '../modules/user/controller'
 import { User } from '../modules/user/entity'
@@ -97,7 +98,7 @@ export default class DialogflowProcessor {
                 case 'issues.addAsignee': {
                     const { issue_number, user_slack_id } = result.parameters
                     const asignee = await userController.find({slackId: user_slack_id})
-                    console.log('ASIGNEE:', user_slack_id, asignee)
+
                     if (!asignee || !(asignee.gitlabProjectId && asignee.gitlabUserId) ) {
                         await sendMessageToUser(message.channel, 'cannot assign issue: assignee must be signed in with gitlab ')
                         break
@@ -112,13 +113,21 @@ export default class DialogflowProcessor {
                 case 'issues.removeAsignee': {
                     const { issue_number, user_slack_id } = result.parameters
                     const asignee = await userController.find({slackId: user_slack_id})
-                    console.log('ASIGNEE:', user_slack_id, asignee)
+
                     if (!asignee || !(asignee.gitlabProjectId && asignee.gitlabUserId) ) {
                         await sendMessageToUser(message.channel, 'cannot unassign: assignee must be signed in with gitlab ')
                         break
                     }
                     await sendMessageToUser(message.channel, 'right now')
                     const text  = await processRemoveAsignee(user, { issue_number, asignee })
+                    await sendMessageToUser(message.channel, text)
+                    break
+                }
+
+                case 'issues.close': {
+                    const { issue_number } = result.parameters
+                    await sendMessageToUser(message.channel, 'wait a moment')
+                    const text  = await processCloseIssue(user, { issue_number })
                     await sendMessageToUser(message.channel, text)
                     break
                 }

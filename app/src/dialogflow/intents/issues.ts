@@ -93,6 +93,17 @@ const processRemoveIssueLabel = async (user: User, options: any) => {
     }
 }
 
+const processCloseIssue = async (user: User, options: any) => {
+    const response =  await GitlabIssues.closeIssue(user, options)
+    const { issue_number } = options
+
+    if (response.error) {
+        return 'There was a problem closing the issue'
+    } else {
+        return `Issue ${issue_number} was closed successfully`
+    }
+}
+
 const processAddAsignee = async (user: User, options: any) => {
     const response =  await GitlabIssues.addAsignee(user, options)
     const { issue_number, asignee } = options
@@ -124,4 +135,5 @@ export {
     processRemoveAsignee,
     processAddAsignee,
     processRemoveIssueLabel
+    processCloseIssue,
 }
