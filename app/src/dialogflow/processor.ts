@@ -5,8 +5,9 @@ import { processGetIssues,
     processSetIssueLabel,
     processAddAsignee,
     processRemoveAsignee,
-    processRemoveIssueLabel
+    processRemoveIssueLabel,
     processCloseIssue,
+    processReopenIssue
 } from './intents/issues'
 import { userController } from '../modules/user/controller'
 import { User } from '../modules/user/entity'
@@ -128,6 +129,14 @@ export default class DialogflowProcessor {
                     const { issue_number } = result.parameters
                     await sendMessageToUser(message.channel, 'wait a moment')
                     const text  = await processCloseIssue(user, { issue_number })
+                    await sendMessageToUser(message.channel, text)
+                    break
+                }
+
+                case 'issues.reopen': {
+                    const { issue_number } = result.parameters
+                    await sendMessageToUser(message.channel, 'right now')
+                    const text  = await processReopenIssue(user, { issue_number })
                     await sendMessageToUser(message.channel, text)
                     break
                 }

@@ -8,7 +8,7 @@ export default class GitlabIssues {
         const { issue_state, issue_scope } = opts
         const { gitlab_access_token, gitlabProjectId } = user
         let uri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues?access_token=${gitlab_access_token}`
-        console.log("USER:", user)
+
         uri += issue_scope
             ? issue_scope === 'created by me'
                 ? '&scope=created-by-me'
@@ -45,6 +45,22 @@ export default class GitlabIssues {
         let uri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
 
         const postData = { state_event: 'closed' }
+
+        const res = await fetch(uri, {
+            headers: { 'Content-Type': 'application/json' },
+            method: 'PUT',
+            body: JSON.stringify(postData)
+        })
+
+        return await res.json()
+    }
+
+    static async reopenIssue(user: User, opts: Issue) {
+        let { issue_number } = opts
+        const { gitlab_access_token, gitlabProjectId } = user
+        let uri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
+
+        const postData = { state_event: 'reopen' }
 
         const res = await fetch(uri, {
             headers: { 'Content-Type': 'application/json' },
