@@ -1,13 +1,7 @@
 export const config = {
     PORT: process.env.APP_PORT || 3000,
-    HOST: process.env.HOST,
-    MONGODB: {
-        PORT: process.env.MONGODB_PORT,
-        SERVER: process.env.MONGODB_SERVER,
-        DATABASE: process.env.MONGODB_DATABASE,
-        USER: process.env.MONGODB_USER,
-        PASSWORD: process.env.MONGODB_PASSWORD
-    },
+    HOST: process.env.HOST || 'http://localhost:3000',
+    MONGO_CONNECTION_STRING: process.env.MONGO_CONNECTION_STRING,
     DIALOGFLOW: {
         CLIENT_ACCESS_TOKEN: process.env.NLP_CLIENT_ACCESS_TOKEN,
         DEVELOPER_ACCESS_TOKEN: process.env.NLP_DEVELOPER_ACCESS_TOKEN
