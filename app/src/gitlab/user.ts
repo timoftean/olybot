@@ -1,6 +1,7 @@
 import fetch from 'node-fetch'
+
 import {User} from "../modules/user/entity"
-import {Issue} from "../types"
+import {Issue} from "../@types"
 
 export default class GitlabUser {
     public static async getUserProjects(user: User, opts?: Issue) {

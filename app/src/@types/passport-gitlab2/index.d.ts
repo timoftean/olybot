@@ -23,13 +23,14 @@ declare module 'passport-gitlab2' {
         userProfileURL?: string
     }
 
-    declare class Strategy extends passport.Strategy {
-        constructor(options: StrategyOption, verify: (accessToken: string, refreshToken: string, profile: Profile, done: (error: any, user?: any) => void) => void)
+    class Strategy extends passport.Strategy {
+        constructor(options: StrategyOption, verify: (accessToken: string, refreshToken: string, profile: Profile, done:
+            (error: any, user?: any) => void) => void)
 
-        userProfile: (accessToken: string, done?: (error: any, profile: Profile) => void) => void
+        public userProfile: (accessToken: string, done?: (error: any, profile: Profile) => void) => void
 
-        name: string
+        public name: string
 
-        authenticate(req: express.Request, options?: passport.AuthenticateOptions): void
+        public authenticate(req: express.Request, options?: passport.AuthenticateOptions): void
     }
 }

@@ -1,7 +1,7 @@
 import { GitlabUser } from "../gitlab"
 import { sendMessageObj } from "./webClient"
 import { User } from "../modules/user/entity"
-import { Project } from "../types"
+import { Project } from '../@types'
 
 export default class SlackInteractions {
     public static async sendUserProjectConfirmation (user: User) {

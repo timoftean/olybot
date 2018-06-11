@@ -9,6 +9,12 @@
     "sourceMap": false,
     "typeRoots" : ["./src/@types", "./node_modules/@types"]
   },
+  "paths": {
+    "*": [
+      "*",
+      "node_modules"
+    ]
+  },
   "files": [
     "./node_modules/@types/mocha/index.d.ts",
     "./node_modules/@types/node/index.d.ts"
