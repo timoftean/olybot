@@ -1,105 +1,57 @@
-import { WebClient } from '@slack/client'
+import {WebClient} from "@slack/client"
 import { config } from '../config'
+import {WebAPICallResult} from "../@types/slack/slack"
+// import {WebAPICallResult} from "@slack/client"
 
+// type WebAPICallResult = slack.WebAPICallResult
+// const WebClient = slack.WebClient
 const botToken = config.SLACK.BOT_ACCESS_TOKEN
 const slackWebClient = new WebClient(botToken)
 
-// todo: find a method to take info about all channels
-// slackWebClient.channels.info('D8DABTS6A')
-//     .then((res) => {
-//         console.log('res/channels', res)
-//     })
-//     .catch(err => console.error('channel error:', err))
-
-
-/*
-  sendMessage()
-  args:
-    channelId (String): Slack channelId to post message to
-    message (String): Message to send to that channel as this bot
-  returns:
-    undefined
-*/
-const sendMessageToUser = async (channel: string, text: string, attachments?: any) => {
+/**
+ *
+ * @param {string} channel - lack channelId to post message to
+ * @param {string} text - Message to send to that channel as this bot
+ * @param attachments - attachments te be shown in the channel
+ * @returns {Promise<void>}
+ */
+const sendMessageToUser = async (channel: string, text: string, attachments?: any): Promise<void> => {
     attachments = JSON.stringify(attachments)
     console.log(`MESSAGE ${text} SENT TO CHANNEL ${channel}`)
     const res = await slackWebClient.chat.postMessage({channel, text, attachments })
     console.log(`WITH RESPONSE ok:${JSON.stringify(res.ok)}`)
-
 }
 
-/*
-  sendMessageObj()
-  args:
-    channelId (String): Slack channelId to post message to
-    messageObj (String): The `attachment` that Slack expects as an object
-  returns:
-    undefined
-*/
-const sendMessageObj = (data: any) => {
+/**
+ * @param data
+ */
+const sendMessageObj = (data: any): void => {
     slackWebClient.chat.postMessage(data)
 }
 
-/*
-  pullInfoFromSlackId()
-    args:
-      slackId (String): slackId of the user you are grabbing info from
-    returns:
-      Promise that resolves with
-      res (Object): with
-        res.user =
-          {
-            id: <slack_id>,
-            team_id: <team_id>,
-            name: <slack_username>,
-            real_name: <slack_real_name>,
-            tz: 'America/Los_Angeles',
-            tz_label: 'Pacific Daylight Time',
-            tz_offset: -25200,
-            profile:
-              {
-                real_name: <slack_real_name>,
-                display_name: <slack_display_name>,,
-                email: <slack_email>,
-                team: <team_id>
-              },
-            is_bot: false,
-          }
-*/
-const pullInfoFromSlackId = async (slackId: string) => await (slackWebClient.users.info({user: slackId}))
+/**
+ *
+ * @param {string} slackId - slackId of the user you are grabbing info from
+ */
+const pullInfoFromSlackId = async (slackId: string):
+    Promise<WebAPICallResult> => await (slackWebClient.users.info({user: slackId}))
 
-/*
-    findSlackDmId()
-      args:
-        slackId (String): slackId of `user` to search bot-to-`user`
-          DM channel for
-      returns:
-        Promise that resolves res that looks like:
-        {
-          ok: true,
-          no_op: true,
-          already_open: true,
-          channel: { id: 'D7NMVCZPU' },
-          scopes: [ 'identify', 'bot:basic' ],
-          acceptedScopes: [ 'im:write', 'post' ]
-        }
-*/
-const findSlackDmId = async (slackId: string) => await (slackWebClient.im.open({user: slackId}))
+/**
+ *
+ * @param {string} slackId - slackId of `user` to search bot-to-`user`
+ * @returns {SlackDMResponse}
+ */
+const findSlackDmId = async (slackId: string):
+    Promise<WebAPICallResult> => await slackWebClient.im.open({user: slackId})
 
-/*
-    updateUserWithSlack()
-    Pull all Slack info (including DM channel id!)
-    args:
-        user (User <Mongoose model>): user to update
-            (has slackId since it's required)
-    returns:
-        Promise that resolves with updated user
-            (user.save() resultant Promise)
-*/
-
+/**
+ *
+ * @param userToUpdate - user to update
+ * @returns {Promise<any>}
+ */
 const updateUserWithSlack = async (userToUpdate: any) => {
     let user = userToUpdate
-    let { user: userData } = await pullInfoFromSlackId(user.slackId)
+    const { user: userData } = await pullInfoFromSlackId(user.slackId)
 
     user.slackUsername = userData.name
     user.slackEmail = userData.profile.email
