@@ -7,46 +7,44 @@ import { AuthenticateOptions } from "passport"
 
 const router = Router()
 
-//------------
-// test route |
-//------------
+// ------------
+//  test route |
+// ------------
 router.get('/hello', (req, res) => {
-    res.json({message: 'hello'})
+    res.send(`Hello! Here is Oly :)`)
 })
 
-//------------
-//gitlab auth|
-//------------
+// ------------
+// gitlab auth|
+// ------------
 
-interface Authenticate extends AuthenticateOptions {
+interface AuthenticateOpts extends AuthenticateOptions {
     state: string
 }
 
 router.get('/gitlab/auth/:userId', (req: express.Request, res: express.Response) => {
     const { userId } = req.params
-    passport.authenticate('gitlab', <Authenticate>{
+    passport.authenticate('gitlab', {
         state: userId,
         scope: ['api']
-    })(req, res)
+    } as AuthenticateOpts)(req, res)
 })
 
 router.get('/auth/gitlab/callback',
     passport.authenticate('gitlab', {
-        failureRedirect: '/login',
-        scope: ['api']
+        failureRedirect: '/login'
     }), gitlabCallback )
 
 router.get('/login', (req: express.Request, res: express.Response) => res.send('unauthenticated'))
 
-//-------------
-//slack webhook|
-//-------------
+// -------------
+// slack webhook|
+// -------------
 router.post('/slackInteract', slackInteract)
 
-// ----------------------
-//gitlab project webhook|
-//-----------------------
+//  ----------------------
+// gitlab project webhook|
+// -----------------------
 router.post('/gitlab/hooks/:projectId', gitlabHook)
-
 
 export { router }

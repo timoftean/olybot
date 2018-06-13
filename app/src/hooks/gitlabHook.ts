@@ -1,8 +1,10 @@
 import { Response, Request } from 'express'
+
 import { userController } from '../modules/user/controller'
 import { sendMessageToUser } from '../slack'
-import {User} from "../modules/user/entity"
-import {GitlabUser} from "../types/index"
+import { GitlabUser } from "../@types"
+import { User } from "../modules/user/entity"
+
 
 export const gitlabHook = async (req: Request, res: Response) => {
     console.log('GITLAB HOOKS:', req.params.projectId, req.headers, req.body)
@@ -15,13 +17,14 @@ export const gitlabHook = async (req: Request, res: Response) => {
     let text = ''
 
     if (headers['x-gitlab-event'] === 'Issue Hook') {
-        const users: any = await userController.findAll({ gitlabProjectId: projectId })
-        users.map((user: User) => {
+        const users: User[] = await userController.findAll({ gitlabProjectId: projectId })
+        console.log('USERSL', users)
+        users.map((usr: User) => {
 
-            //skip the user who made the action
-            if (username === user.gitlabUsername) return
+            // skip the user who made the action
+            if (username === usr.gitlabUsername) return
 
-            text += `Hey ${user.displayName}, ${name} @${username} `
+            text += `Hey ${usr.displayName}, ${name} @${username} `
 
             if (action === 'update') {
                 if (assignees.current.length !== 0) {
@@ -44,7 +47,7 @@ export const gitlabHook = async (req: Request, res: Response) => {
             }
             text += `the issue number ${iid}: ${title}`
 
-            sendMessageToUser(user.slackDmId, text)
+            sendMessageToUser(usr.slackDmId, text)
         })
         // todo: add issue close
 

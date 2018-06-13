@@ -25,7 +25,7 @@ export default class DialogflowProcessor {
             await sendMessageToUser(message.channel, result.fulfillment.speech)
         } else {
 
-            //allow user smalltalk and welcome messages before asking to login or select project
+            // allow user smalltalk and welcome messages before asking to login or select project
             if (result.metadata.intentName &&
                 result.metadata.intentName.indexOf('Default') === -1 &&
                 result.action.indexOf('smalltalk') === -1
@@ -33,7 +33,8 @@ export default class DialogflowProcessor {
                 const notLoggedIn = await DialogFlowUtils.processAndSendTextIfNotLoggedIng(message.channel, user)
                 if (notLoggedIn) return
 
-                const projectNotSelected = await DialogFlowUtils.processAndSendTextIfNotProjectSelected(message.channel, user)
+                const projectNotSelected =
+                    await DialogFlowUtils.processAndSendTextIfNotProjectSelected(message.channel, user)
                 if (projectNotSelected) return
             }
 
@@ -42,14 +43,16 @@ export default class DialogflowProcessor {
                     const { issue_state, issue_scope } = result.parameters
                     const { gitlabUserId } = user
                     await sendMessageToUser(message.channel, 'wait a moment :)')
-                    const { attachments, text }  = await processGetIssues(user, { issue_state, issue_scope, gitlabUserId })
+                    const { attachments, text }  =
+                        await processGetIssues(user, { issue_state, issue_scope, gitlabUserId })
                     console.log('PARAMETERS', text, issue_state, issue_scope, gitlabUserId)
                     await sendMessageToUser(message.channel, text, attachments)
                     break
                 }
 
                 case 'issues.getAssignedToMe': {
-                    const { attachments, text }  = await processGetIssues(user,{ issue_scope: 'assigned to me', issue_state: 'opened' })
+                    const { attachments, text }  =
+                        await processGetIssues(user,{ issue_scope: 'assigned to me', issue_state: 'opened' })
                     await sendMessageToUser(message.channel, text, attachments)
                     break
                 }
@@ -101,7 +104,9 @@ export default class DialogflowProcessor {
                     const asignee = await userController.find({slackId: user_slack_id})
 
                     if (!asignee || !(asignee.gitlabProjectId && asignee.gitlabUserId) ) {
-                        await sendMessageToUser(message.channel, 'cannot assign issue: assignee must be signed in with gitlab ')
+                        await sendMessageToUser(
+                            message.channel,
+                            'cannot assign issue: assignee must be signed in with gitlab ')
                         break
                     }
 
@@ -116,7 +121,10 @@ export default class DialogflowProcessor {
                     const asignee = await userController.find({slackId: user_slack_id})
 
                     if (!asignee || !(asignee.gitlabProjectId && asignee.gitlabUserId) ) {
-                        await sendMessageToUser(message.channel, 'cannot unassign: assignee must be signed in with gitlab ')
+                        await sendMessageToUser(
+                            message.channel,
+                            'cannot unassign: assignee must be signed in with gitlab '
+                        )
                         break
                     }
                     await sendMessageToUser(message.channel, 'right now')
@@ -129,6 +137,7 @@ export default class DialogflowProcessor {
                     const { issue_number } = result.parameters
                     await sendMessageToUser(message.channel, 'wait a moment')
                     const text  = await processCloseIssue(user, { issue_number })
+                    console.log('CLOSE ISSUE:', text)
                     await sendMessageToUser(message.channel, text)
                     break
                 }

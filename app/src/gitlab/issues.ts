@@ -1,13 +1,16 @@
 import fetch from 'node-fetch'
-import { Project, GitlabUser, Issue } from '../types'
-import {User} from "../modules/user/entity"
+
+import {Project, GitlabUser, Issue } from '../@types'
+import { User } from "../modules/user/entity"
 
 export default class GitlabIssues {
 
-     static async getIssues(user: User, opts: Issue) {
+     public static async getIssues(user: User, opts: Issue) {
         const { issue_state, issue_scope } = opts
         const { gitlab_access_token, gitlabProjectId } = user
-        let uri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues?access_token=${gitlab_access_token}`
+
+        let uri: string = `https://gitlab.com/api/v4/projects/`
+            + `${gitlabProjectId}/issues?access_token=${gitlab_access_token}`
 
         uri += issue_scope
             ? issue_scope === 'created by me'
@@ -18,13 +21,16 @@ export default class GitlabIssues {
         uri += issue_state ? `&state=${issue_state}` : ''
 
         const res = await fetch(uri)
-        return await res.json()
-    }
+        const r = await res.json()
+        console.log('issues:', r)
+        return r
+     }
 
-    static async createIssue(user: User, opts: Issue) {
+    public static async createIssue(user: User, opts: Issue) {
         const { issue_title } = opts
         const { gitlab_access_token, gitlabProjectId } = user
-        let uri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues?access_token=${gitlab_access_token}`
+        const uri: string = `https://gitlab.com/api/v4/projects/`
+            + `${gitlabProjectId}/issues?access_token=${gitlab_access_token}`
 
         const postData = {
             id: gitlabProjectId,
@@ -39,12 +45,13 @@ export default class GitlabIssues {
         return await res.json()
     }
 
-    static async closeIssue(user: User, opts: Issue) {
-        let { issue_number } = opts
+    public static async closeIssue(user: User, opts: Issue) {
+        const { issue_number } = opts
         const { gitlab_access_token, gitlabProjectId } = user
-        let uri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
+        const uri: string = `https://gitlab.com/api/v4/projects/`
+            + `${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
 
-        const postData = { state_event: 'closed' }
+        const postData = { state_event: 'close' }
 
         const res = await fetch(uri, {
             headers: { 'Content-Type': 'application/json' },
@@ -55,10 +62,11 @@ export default class GitlabIssues {
         return await res.json()
     }
 
-    static async reopenIssue(user: User, opts: Issue) {
-        let { issue_number } = opts
+    public static async reopenIssue(user: User, opts: Issue) {
+        const { issue_number } = opts
         const { gitlab_access_token, gitlabProjectId } = user
-        let uri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
+        const uri: string = `https://gitlab.com/api/v4/projects/`
+            + `${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
 
         const postData = { state_event: 'reopen' }
 
@@ -71,15 +79,16 @@ export default class GitlabIssues {
         return await res.json()
     }
 
-    static async setIssueLabel(user: User, opts: Issue) {
-        let { issue_number, issue_label: issues_labels } = opts
+    public static async setIssueLabel(user: User, opts: Issue) {
+        const { issue_number, issue_label: issueLabels } = opts
         const { gitlab_access_token, gitlabProjectId } = user
-        let uri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
+        const uri: string = `https://gitlab.com/api/v4/projects/`
+            + `${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
 
-        const labels = issues_labels
+        const labels = issueLabels
             .map((label: string) => label.replace(',', ''))
             .join(',')
-            //make first letter capital
+            // make first letter capital
             .replace(/\w\S*/g, (txt: string) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase() )
 
         const postData = { labels }
@@ -93,15 +102,16 @@ export default class GitlabIssues {
         return await res.json()
     }
 
-    static async removeIssueLabel(user: User, opts: Issue) {
-        let { issue_number, issue_label } = opts
+    public static async removeIssueLabel(user: User, opts: Issue) {
+        const { issue_number, issue_label } = opts
         const { gitlab_access_token, gitlabProjectId } = user
-        let uri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
+        const uri: string = `https://gitlab.com/api/v4/projects/`
+            + `${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
 
         const response = await fetch(uri)
         const issueJson = await response.json()
 
-        //take first label and make first letters capital
+        // take first label and make first letters capital
         const labelToRemove: string =
             issue_label[0]
             .replace(/\w\S*/g, (txt: string) => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase() )
@@ -123,19 +133,21 @@ export default class GitlabIssues {
         return await res.json()
     }
 
-    static async addAsignee(user: User, opts: any) {
+    public static async addAsignee(user: User, opts: any) {
         const { issue_number, asignee } = opts
         const { gitlabUserId } = asignee
         const { gitlab_access_token, gitlabProjectId } = user
-        let projectUri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
-        let addAsigneeUri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
+        const projectUri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues/`
+            + `${issue_number}?access_token=${gitlab_access_token}`
+        const addAsigneeUri: string = `https://gitlab.com/api/v4/projects/`
+            + `${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
 
-        const asignees: Array<number> = [gitlabUserId]
+        const asignees: number[] = [gitlabUserId]
         const response = await fetch(projectUri)
 
         const projectJson: Project = await response.json()
-        projectJson.assignees.map((user: GitlabUser) => {
-            asignees.push(user.id)
+        projectJson.assignees.map((usr: GitlabUser) => {
+            asignees.push(usr.id)
         })
 
         try {
@@ -153,19 +165,21 @@ export default class GitlabIssues {
         }
     }
 
-    static async removeAsignee(user: User, opts: Issue) {
+    public static async removeAsignee(user: User, opts: Issue) {
         const { issue_number, asignee } = opts
         const { gitlabUserId } = asignee
         const { gitlab_access_token, gitlabProjectId } = user
-        let projectUri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
-        let addAsigneeUri: string = `https://gitlab.com/api/v4/projects/${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
+        const projectUri: string = `https://gitlab.com/api/v4/projects/`
+            + `${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
+        const addAsigneeUri: string = `https://gitlab.com/api/v4/projects/`
+            + `${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
 
 
         const response = await fetch(projectUri)
         const projectJson: Project = await response.json()
-        const asignees: Array<number> = []
-        projectJson.assignees.map((user: GitlabUser) => {
-            if (user.id !== gitlabUserId) asignees.push(user.id)
+        const asignees: number[] = []
+        projectJson.assignees.map((usr: GitlabUser) => {
+            if (usr.id !== gitlabUserId) asignees.push(usr.id)
         })
 
         try {

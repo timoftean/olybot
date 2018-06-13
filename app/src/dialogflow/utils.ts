@@ -1,11 +1,13 @@
 import {User} from "../modules/user/entity"
 import {sendMessageToUser} from "../slack/webClient"
 import { SlackInteractions } from "../slack"
+import {config} from "../config"
 
 export default class DialogFlowUtils {
 
     public static async processAndSendTextIfNotLoggedIng (channel: string, user: User) {
-        const loginMessage = `Please first connect to Gitlab account by visiting http://localhost:3000/gitlab/auth/${user.slackId}`
+        const loginMessage =
+            `Please first connect to Gitlab account by visiting ${config.HOST}/gitlab/auth/${user.slackId}`
         const responseMessage = 'Please check your direct message with me to login with Gitlab first'
 
         if (!user.gitlabUserId) {
