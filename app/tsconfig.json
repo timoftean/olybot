@@ -7,6 +7,7 @@
     "noImplicitAny": false,
     "strictNullChecks": false,
     "sourceMap": false,
+
     "typeRoots" : ["./src/@types", "./node_modules/@types"]
   },
   "paths": {
@@ -21,9 +22,10 @@
   ],
   "include": [
     "src/**/*.ts",
-    "types/*.d.ts"
+    "@types/*.d.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "node_modules/@slack/client/dist/util.d.ts"
   ]
 }

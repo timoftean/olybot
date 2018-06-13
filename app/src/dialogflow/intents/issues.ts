@@ -18,8 +18,8 @@ const processAttachments = (issues: any[]) => {
         })
 
         fields.push({
-            "title": "Issue number",
-            "value": issue.iid,
+            title: "Issue number",
+            value: issue.iid,
             short: true
         })
 
