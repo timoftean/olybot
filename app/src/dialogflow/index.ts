@@ -1,3 +1,1 @@
-import DialogflowProcessor from './processor'
-
-export { DialogflowProcessor }
+export { DialogflowProcessor } from './processor'
