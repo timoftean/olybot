@@ -1,8 +1,10 @@
-import { RTMClient } from '@slack/client'
+import * as slack from '@slack/client'
 import { userController } from '../modules/user/controller'
 import { config } from '../config'
 import { DialogflowProcessor } from "../dialogflow"
 
+// @ts-ignore
+const RTMClient = slack.RTMClient
 const botToken = config.SLACK.BOT_ACCESS_TOKEN
 const rtm = new RTMClient(botToken)
 
@@ -30,7 +32,7 @@ rtm.on('message', async (message): Promise<void> => {
             user.slackDmId = message.channel
             user = await user.save()
         }
-        // console.log("USER:", user)
+
         await DialogflowProcessor.processMessage(user, message)
     } catch (error) {
         console.log('CANNOT PROCESS SLACK MESSAGE: ', error)

@@ -1,10 +1,9 @@
-import {WebClient} from "@slack/client"
+import * as slack from "@slack/client"
 import { config } from '../config'
-import {WebAPICallResult} from "../@types/slack/slack"
-// import {WebAPICallResult} from "@slack/client"
 
-// type WebAPICallResult = slack.WebAPICallResult
-// const WebClient = slack.WebClient
+// @ts-ignore
+const WebClient = slack.WebClient
+type WebAPICallResult = slack.WebAPICallResult
 const botToken = config.SLACK.BOT_ACCESS_TOKEN
 const slackWebClient = new WebClient(botToken)
 
@@ -37,9 +36,8 @@ const pullInfoFromSlackId = async (slackId: string):
     Promise<WebAPICallResult> => await (slackWebClient.users.info({user: slackId}))
 
 /**
- *
  * @param {string} slackId - slackId of `user` to search bot-to-`user`
- * @returns {SlackDMResponse}
+ * @returns {Promise<WebAPICallResult>}
  */
 const findSlackDmId = async (slackId: string):
     Promise<WebAPICallResult> => await slackWebClient.im.open({user: slackId})
