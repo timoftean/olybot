@@ -138,6 +138,17 @@ const processRemoveAsignee = async (user: User, options: any) => {
     }
 }
 
+const processEditIssue = async (user: User, options: any) => {
+    const response =  await GitlabIssues.editIssue(user, options)
+    const { issue_number, issue_title } = options
+
+    if (response.error) {
+        return `There was a problem updating issue ${issue_number}`
+    } else {
+        return `Issue ${issue_number} title was updated to "${issue_title}"`
+    }
+}
+
 export {
     processGetIssues,
     processCreateIssues,
@@ -146,5 +157,6 @@ export {
     processAddAsignee,
     processRemoveIssueLabel,
     processCloseIssue,
-    processReopenIssue
+    processReopenIssue,
+    processEditIssue
 }

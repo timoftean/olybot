@@ -197,4 +197,25 @@ export default class GitlabIssues {
         }
     }
 
+    public static async editIssue(user: User, opts: Issue) {
+        const { issue_number, issue_title } = opts
+        const { gitlab_access_token, gitlabProjectId } = user
+        const URI: string = `https://gitlab.com/api/v4/projects/`
+            + `${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
+
+        try {
+            const res = await fetch(URI, {
+                headers: { 'Content-Type': 'application/json' },
+                method: 'PUT',
+                body: JSON.stringify({title: issue_title})
+            })
+            const json =  await res.json()
+
+            console.log('EDIT RESPONSE:', json)
+            if (json.message) return { error: json.message }
+            return json
+        } catch (e) {
+            return { error: e.message }
+        }
+    }
 }
