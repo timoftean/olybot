@@ -5,16 +5,16 @@
   "main": "index.js",
   "scripts": {
     "start": "node dist",
-    "dev": "tsc --watch & nodemon dist",
+    "dev": "tsc --watch --skipLibCheck & nodemon dist",
     "clean": "rimraf coverage build tmp",
-    "build": "tsc -p tsconfig.release.json",
+    "build": "tsc --skipLibCheck",
     "watch": "tsc -w -p tsconfig.release.json",
     "lint": "tslint -t stylish --project \"tsconfig.json\"",
     "pretest": "npm run lint",
     "test": "npm run test-only",
     "test-only": "jest --coverage",
     "test:watch": "jest --watch",
-    "deploy": "now --alias=oly --no-verify --npm --dotenv=.env.production --public && now alias oly"
+    "deploy": "now --alias=oly --no-verify --docker --dotenv=.env.production --public && now alias oly"
   },
   "keywords": [],
   "author": "Timofte Alexandru",
@@ -37,7 +37,7 @@
     "passport-gitlab2": "^4.0.0",
     "path": "^0.12.7",
     "slack": "^11.0.0",
-    "typescript": "^2.8.3"
+    "typescript": "^2.9.2"
   },
   "devDependencies": {
     "@types/body-parser": "^1.17.0",
