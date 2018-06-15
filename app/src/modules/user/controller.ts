@@ -15,7 +15,7 @@ class UserController {
      * @returns {Promise<User>}
      */
     public async findOneOrCreateWithSlackId (query: object): Promise<Document | User> {
-        try{
+        try {
             let user = await this.model.findOne(query)
             if (user) {
                 return user

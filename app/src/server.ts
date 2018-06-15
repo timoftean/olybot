@@ -135,7 +135,7 @@ export class Server {
             const bind = typeof addr === "string"
                 ? "pipe " + addr
                 : "port " + addr.port
-            console.log('SERVER listening on PORT ' + addr.port + '\n')
+            console.log('SERVER listening on PORT ' + addr.port + bind + '\n')
         })
     }
 

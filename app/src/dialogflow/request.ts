@@ -21,5 +21,4 @@ export const request = async (user: User, message: any) => {
     } catch (error) {
         console.log('DIALOGFLOW REQUEST ERROR: ', error)
     }
-
 }

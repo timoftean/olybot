@@ -5,14 +5,13 @@ import { sendMessageToUser } from '../slack'
 import { GitlabUser } from "../@types"
 import { User } from "../modules/user/entity"
 
-
 export const gitlabHook = async (req: Request, res: Response) => {
     console.log('GITLAB HOOKS:', req.params.projectId, req.headers, req.body)
     const { projectId } = req.params
     const { headers, body } = req
     const { changes, object_attributes, user } = body
     const { name, username } = user
-    const { assignees, closed_at, state } = changes
+    const { assignees } = changes
     const { action, iid, title } = object_attributes
     let text = ''
 
@@ -34,7 +33,7 @@ export const gitlabHook = async (req: Request, res: Response) => {
                     })
                 }
 
-                if (assignees.current.length !== 0 && assignees.previous.length !== 0){
+                if (assignees.current.length !== 0 && assignees.previous.length !== 0) {
                     text += 'and '
                 }
 
@@ -54,5 +53,4 @@ export const gitlabHook = async (req: Request, res: Response) => {
     }
 
     res.json({ok:true})
-
 }
