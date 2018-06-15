@@ -16,7 +16,7 @@ class UserController {
      */
     public async findOneOrCreateWithSlackId (query: object): Promise<Document | User> {
         try{
-            let user = await <User | any>this.model.findOne(query)
+            let user = await this.model.findOne(query)
             if (user) {
                 return user
             }
@@ -27,7 +27,7 @@ class UserController {
             }
 
             return user
-        } catch(error) {
+        } catch (error) {
             console.error('COULD NOT FIND|CREATE USER', error)
         }
     }

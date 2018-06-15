@@ -21,9 +21,7 @@ export default class GitlabIssues {
         uri += issue_state ? `&state=${issue_state}` : ''
 
         const res = await fetch(uri)
-        const r = await res.json()
-        console.log('issues:', r)
-        return r
+        return await res.json()
      }
 
     public static async createIssue(user: User, opts: Issue) {
@@ -174,7 +172,6 @@ export default class GitlabIssues {
         const addAsigneeUri: string = `https://gitlab.com/api/v4/projects/`
             + `${gitlabProjectId}/issues/${issue_number}?access_token=${gitlab_access_token}`
 
-
         const response = await fetch(projectUri)
         const projectJson: Project = await response.json()
         const asignees: number[] = []
@@ -211,7 +208,6 @@ export default class GitlabIssues {
             })
             const json =  await res.json()
 
-            console.log('EDIT RESPONSE:', json)
             if (json.message) return { error: json.message }
             return json
         } catch (e) {

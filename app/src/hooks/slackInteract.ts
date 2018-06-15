@@ -2,7 +2,6 @@ import { Request, Response } from 'express'
 import { UserModel } from "../modules/user/entity"
 import { GitlabProject } from "../gitlab"
 
-
 export const slackInteract = async (req: Request, res: Response) => {
     const payload = JSON.parse(req.body.payload)
     const { callback_id, user, actions } = payload
@@ -19,7 +18,7 @@ export const slackInteract = async (req: Request, res: Response) => {
                 {new: true}
             )
 
-            //register webhook for project
+            // register webhook for project
             await GitlabProject.registerProjectWebhook(updatedUser)
 
             res.send(`Project confirmed ✅`)

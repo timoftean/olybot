@@ -6,7 +6,7 @@ import { Project } from '../@types'
 export default class SlackInteractions {
     public static async sendUserProjectConfirmation (user: User) {
         const projects = await GitlabUser.getUserProjects(user)
-        let actions: any[] = []
+        const actions = []
 
         projects.map((project: Project) => {
             actions.push({
@@ -33,7 +33,7 @@ export default class SlackInteractions {
                     text: `Please confirm on which project you want to work from now on.`,
                     fallback: 'Project confirmation',
                     attachment_type: 'default',
-                    actions: actions
+                    actions
                 }]
             }
         )
