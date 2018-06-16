@@ -153,8 +153,19 @@ export default class DialogflowProcessor {
 
                 case 'issues.edit': {
                     const { issue_number, issue_title } = result.parameters
-                    console.log('EDIT ISSUE:', issue_number, issue_title)
                     const text  = await processEditIssue(user, { issue_number, issue_title })
+
+                    await sendMessageToUser(message.channel, text)
+                    break
+                }
+
+                case 'issues.help': {
+                    const text = 'I can help you manage your Gitlab issues. I can show you all the issues, ' +
+                        'the ones created by you or assigned to you, opened or closed and even the ' +
+                        'issues with a specific label (for example the ones from "to do" list, or "done"). ' +
+                        'I can also create and edit issues, close and open them, and add or remove ' +
+                        'label such as "to do" by specifying the task number. I can help you to assign or unassign a ' +
+                        'teammate on a task by tagging him. '
 
                     await sendMessageToUser(message.channel, text)
                     break
