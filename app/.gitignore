@@ -3,3 +3,5 @@ npm-debug.log
 .idea
 .env
 .env.production
+.nyc_output
+coverage

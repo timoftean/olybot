@@ -22,6 +22,7 @@ class UserController {
             }
 
             user = await this.model.create(query)
+            // @ts-ignore
             if (!user.slackUsername) {
                 return updateUserWithSlack(user)
             }

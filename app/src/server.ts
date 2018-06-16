@@ -14,7 +14,7 @@ import { startRTM } from './slack'
 
 export class Server {
 
-    private app: express.Application
+    public app: express.Application
     private server: http.Server
 
     constructor() {
