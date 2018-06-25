@@ -6,11 +6,12 @@ describe('/api', () => {
 
     describe('GET /hello', () => {
 
-        it('hello works', async () => {
+        it('app is running', async () => {
             request(new Server().app)
                 .get('/hello')
                 .expect('Content-Type', 'application/json; charset=utf-8')
                 .expect('Content-Length', '32')
+                .expect(200)
         })
     })
 })

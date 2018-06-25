@@ -33,19 +33,19 @@ const UserSchema = new Schema({
     },
     slackId: {
         type: String,
-        required: true,
+        required: true
     },
     slackUsername: {
-        type: String,
+        type: String
     },
     slackEmail: {
-        type: String,
+        type: String
     },
     slackDmId: {
-        type: String,
+        type: String
     },
     displayName: {
-        type: String,
+        type: String
     }
 })
 
