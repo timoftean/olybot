@@ -11,8 +11,8 @@ class UserController {
 
     /**
      * find a user or create one with slack information
-     * @param query
-     * @returns {Promise<User>}
+     * @param {Object} query
+     * @returns {Promise<"mongoose".Document | User>}
      */
     public async findOneOrCreateWithSlackId (query: object): Promise<Document | User> {
         try {
@@ -35,8 +35,8 @@ class UserController {
 
     /**
      * find user
-     * @param cond
-     * @returns {Promise<"mongoose".Document>}
+     * @param {Object} cond
+     * @returns {Promise<User | any>}
      */
     public async find(cond: object): Promise<User | any> {
         return await this.model.findOne(cond)
@@ -44,8 +44,8 @@ class UserController {
 
     /**
      * find all users
-     * @param cond
-     * @returns {Promise<"mongoose".Document[]>}
+     * @param {Object} cond
+     * @returns {Promise<User[] | any[]>}
      */
     public async findAll(cond: object): Promise<User[] | any[]> {
         return await this.model.find(cond)

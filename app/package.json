@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "start": "NODE_ENV=production node dist",
-    "dev": "tsc --watch --skipLibCheck & NODE_ENV=development nodemon dist",
+    "dev": "tsc --watch & NODE_ENV=development nodemon dist",
     "clean": "rimraf coverage build tmp",
     "build": "tsc --skipLibCheck",
     "watch": "tsc -w -p tsconfig.release.json",
@@ -13,11 +13,11 @@
     "pretest": "npm run lint",
     "test": "mocha --colors --require ts-node/register ./**/*.spec.ts",
     "test:coverage": "nyc -e '.ts' --r html -r lcov -r text npm run test",
-    "deploy": "now --alias=oly --no-verify --docker --dotenv=.env.production --public && now alias oly"
+    "deploy": "now --no-verify --docker --dotenv=.env.production --public && now alias oly"
   },
   "keywords": [],
   "author": "Timofte Alexandru",
-  "license": "ISC",
+  "license": "MIT",
   "dependencies": {
     "@slack/client": "^4.2.2",
     "body-parser": "^1.18.2",
