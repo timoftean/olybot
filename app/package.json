@@ -24,7 +24,7 @@
     "concurrently": "^3.5.1",
     "cors": "^2.8.4",
     "dotenv": "^5.0.1",
-    "express": "4.15.3",
+    "express": "4.17.3",
     "express-session": "^1.15.6",
     "http": "0.0.0",
     "method-override": "^2.3.10",
